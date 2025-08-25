@@ -22,3 +22,6 @@ docker-compose.yml
 
 # Ignore .prompts folder and its contents
 .prompts/
+
+# Images uploaded
+services/user-service/app/uploads/avatars
