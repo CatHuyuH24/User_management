@@ -1,0 +1,24 @@
+# General .gitignore
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak
+venv.bak
+
+# Database
+*.sqlite3
+*.db
+
+# Docker
+.dockerignore
+docker-compose.yml
+
+# Ignore .prompts folder and its contents
+.prompts/
