@@ -1,7 +1,41 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from api.v1.endpoints import router as api_router
+from core.config import settings
+from db.session import engine
+from models.user import User
 
-app = FastAPI(title="User Service")
+# Create database tables
+User.metadata.create_all(bind=engine)
+
+app = FastAPI(
+    title=settings.PROJECT_NAME,
+    version=settings.VERSION,
+    description="User Management Microservice with FastAPI",
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
+
+# CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Configure properly for production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Include API routes
+app.include_router(api_router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to the User Service"}
+    return {
+        "message": "Welcome to the User Management Service",
+        "version": settings.VERSION,
+        "docs_url": "/docs"
+    }
+
+@app.get("/health")
+def health_check():
+    return {"status": "healthy", "service": "user-management"}

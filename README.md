@@ -1,52 +1,98 @@
-# User Management Microservice Project
+# User Management Web Application
 
-This project is a user management web application built with a microservices architecture using FastAPI.
+A complete full-stack web application for user management with sign-up, login, and profile management features.
 
-## Features
+## 🏗️ Architecture
 
-- User registration and authentication
-- User profile management (name, year of birth, description, avatar)
-- RESTful API with FastAPI
-- PostgreSQL database integration
-- Docker containerization
-- Automatic API documentation
+### Backend
 
-## Project Structure
+- **Framework**: FastAPI 0.104.1
+- **Database**: PostgreSQL 13
+- **Authentication**: JWT tokens with bcrypt password hashing
+- **Containerization**: Docker & Docker Compose
+- **API Documentation**: Automatic OpenAPI/Swagger docs
+
+### Frontend
+
+- **Framework**: Vanilla JavaScript with Bootstrap 5
+- **Styling**: Responsive design with custom CSS
+- **Icons**: Font Awesome 6
+- **Server**: Python HTTP server with CORS support
+
+## 📁 Project Structure
 
 ```
 user_management/
-├── docs/                    # Project documentation
-│   ├── API_Specification.md
-│   ├── System_Architecture.md
-│   ├── UI_UX.md
-│   └── User_Stories.md
-├── services/               # Microservices
-│   └── user-service/      # User management service
-│       ├── app/           # FastAPI application
-│       ├── tests/         # Test files
-│       ├── Dockerfile     # Container configuration
-│       └── requirements.txt
-├── docker-compose.yml     # Service orchestration
-├── init.bat              # Windows initialization script
-└── init.sh               # Unix initialization script
+├── backend/
+│   ├── services/
+│   │   └── user-service/
+│   │       ├── app/
+│   │       │   ├── __init__.py
+│   │       │   ├── main.py              # FastAPI application
+│   │       │   ├── database.py          # Database connection
+│   │       │   ├── models.py            # SQLAlchemy models
+│   │       │   ├── schemas.py           # Pydantic schemas
+│   │       │   ├── crud.py              # Database operations
+│   │       │   ├── auth.py              # Authentication utilities
+│   │       │   └── utils.py             # Helper functions
+│   │       ├── requirements.txt         # Python dependencies
+│   │       └── Dockerfile               # Container configuration
+│   ├── docker-compose.yml              # Multi-service orchestration
+│   └── init.sql                         # Database initialization
+├── frontend/
+│   ├── index.html                       # Landing page
+│   ├── signup.html                      # User registration
+│   ├── login.html                       # User authentication
+│   ├── profile.html                     # User profile management
+│   ├── server.html                      # Server information
+│   ├── js/
+│   │   ├── common.js                    # Shared utilities
+│   │   ├── signup.js                    # Registration logic
+│   │   ├── login.js                     # Authentication logic
+│   │   └── profile.js                   # Profile management
+│   └── frontend_server.py              # Development server
+├── Database_Schema.md                   # Database design documentation
+└── README.md                           # This file
 ```
 
-## Quick Start
+## 🚀 Quick Start
 
-### Option 1: Use Initialization Scripts
+### Prerequisites
 
-**Windows:**
+- Docker and Docker Compose
+- Python 3.9+ (for frontend server)
 
-```cmd
-init.bat
+### 1. Start Backend Services
+
+Navigate to the backend directory and start the services:
+
+```powershell
+cd backend
+docker-compose up --build
 ```
 
-**Unix/Linux/macOS:**
+This will start:
 
-```bash
-chmod +x init.sh
-./init.sh
+- PostgreSQL database on port 5432
+- FastAPI application on port 8000
+
+### 2. Start Frontend Server
+
+In a new terminal, navigate to the frontend directory:
+
+```powershell
+cd frontend
+python frontend_server.py
 ```
+
+The frontend will be available at `http://localhost:3000`
+
+### 3. Access the Application
+
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:8000
+- **API Documentation**: http://localhost:8000/docs
+- **Database**: localhost:5432 (user: admin, password: password123, db: user_management)
 
 ### Option 2: Manual Setup
 
