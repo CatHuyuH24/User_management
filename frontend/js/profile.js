@@ -47,6 +47,9 @@ function displayProfile(profile) {
     fullName || profile.username;
   document.getElementById('profileEmail').textContent = profile.email;
 
+  // Update avatar
+  displayAvatar(profile.avatar_url);
+
   // Update display fields
   document.getElementById('displayUsername').textContent = profile.username;
   document.getElementById('displayFirstName').textContent =
@@ -77,6 +80,7 @@ function displayProfile(profile) {
 function toggleEditMode(edit) {
   const viewMode = document.getElementById('viewMode');
   const editMode = document.getElementById('editMode');
+  const avatarUpload = document.getElementById('avatarUpload');
 
   if (edit) {
     // Populate edit form with current values
@@ -91,11 +95,21 @@ function toggleEditMode(edit) {
     // Update character count
     updateDescriptionCount();
 
+    // Show avatar upload controls
+    if (avatarUpload) {
+      avatarUpload.style.display = 'block';
+    }
+
     viewMode.style.display = 'none';
     editMode.style.display = 'block';
   } else {
     viewMode.style.display = 'block';
     editMode.style.display = 'none';
+
+    // Hide avatar upload controls
+    if (avatarUpload) {
+      avatarUpload.style.display = 'none';
+    }
 
     // Clear any errors
     clearAllErrors(document.getElementById('editProfileForm'));
@@ -212,3 +226,116 @@ function logout() {
     }, 1000);
   }
 }
+
+// Avatar related functions
+function displayAvatar(avatarUrl) {
+  const avatarImage = document.getElementById('avatarImage');
+  const avatarIcon = document.getElementById('avatarIcon');
+
+  if (avatarUrl) {
+    const fullAvatarUrl = avatarUrl.startsWith('http')
+      ? avatarUrl
+      : `http://localhost:8000${avatarUrl}`;
+
+    avatarImage.src = fullAvatarUrl;
+    avatarImage.style.display = 'block';
+    avatarIcon.style.display = 'none';
+  } else {
+    avatarImage.style.display = 'none';
+    avatarIcon.style.display = 'flex';
+  }
+}
+
+function initializeAvatarUpload() {
+  const avatarFile = document.getElementById('avatarFile');
+  const avatarUpload = document.getElementById('avatarUpload');
+
+  if (avatarFile) {
+    avatarFile.addEventListener('change', handleAvatarUpload);
+  }
+
+  // Show avatar upload controls in edit mode
+  const editModeToggle = document.querySelector(
+    '[onclick="toggleEditMode(true)"]'
+  );
+  if (editModeToggle) {
+    editModeToggle.addEventListener('click', () => {
+      if (avatarUpload) {
+        avatarUpload.style.display = 'block';
+      }
+    });
+  }
+
+  // Hide avatar upload controls in view mode
+  const cancelEditButton = document.querySelector(
+    '[onclick="toggleEditMode(false)"]'
+  );
+  if (cancelEditButton) {
+    cancelEditButton.addEventListener('click', () => {
+      if (avatarUpload) {
+        avatarUpload.style.display = 'none';
+      }
+    });
+  }
+}
+
+async function handleAvatarUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  // Validate file type
+  const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+  if (!allowedTypes.includes(file.type)) {
+    showAlert('Please select a valid image file (JPG, PNG, or GIF)', 'danger');
+    return;
+  }
+
+  // Validate file size (5MB)
+  const maxSize = 5 * 1024 * 1024;
+  if (file.size > maxSize) {
+    showAlert('File size must be less than 5MB', 'danger');
+    return;
+  }
+
+  showLoading(true);
+
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await fetch(`${API_BASE_URL}/users/me/avatar`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || 'Avatar upload failed');
+    }
+
+    const updatedProfile = await response.json();
+
+    // Update global profile data
+    userProfile = updatedProfile;
+
+    // Update avatar display
+    displayAvatar(updatedProfile.avatar_url);
+
+    showAlert('Avatar updated successfully!', 'success');
+  } catch (error) {
+    console.error('Avatar upload error:', error);
+    showAlert(error.message || 'Failed to upload avatar', 'danger');
+  } finally {
+    showLoading(false);
+    // Clear the file input
+    event.target.value = '';
+  }
+}
+
+// Initialize avatar upload when DOM is loaded
+document.addEventListener('DOMContentLoaded', function () {
+  initializeAvatarUpload();
+});

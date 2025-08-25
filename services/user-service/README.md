@@ -10,7 +10,7 @@ This is the main service for handling user management.
     pip install -r requirements.txt
     ```
 
-2.  **Run the server:**
+2.  **Run the backend:**
     ```bash
     uvicorn app.main:app --reload
     ```

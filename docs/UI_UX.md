@@ -4,50 +4,73 @@ This document outlines the user interface (UI) and user experience (UX) design f
 
 ## 1. Overall Design Philosophy
 
-- **Clean and Modern:** The UI should be uncluttered, with a modern aesthetic.
-- **Intuitive:** Navigation and user flows should be straightforward and easy to understand.
-- **Responsive:** The application must be fully responsive and work seamlessly on desktops, tablets, and mobile devices.
+- **Clean and Modern:** The UI features an uncluttered, modern aesthetic using Bootstrap 5 framework.
+- **Intuitive:** Navigation and user flows are straightforward and easy to understand.
+- **Responsive:** The application is fully responsive and works seamlessly on desktops, tablets, and mobile devices.
+- **Professional Branding:** Custom favicon and consistent visual identity across all pages.
+- **User-Centered:** Focus on ease of use and clear user feedback.
 
-## 2. Wireframes
+## 2. Technology Stack
 
-### 2.1. Sign-Up Page
+- **Frontend Framework:** Vanilla JavaScript with Bootstrap 5
+- **Styling:** Custom CSS with Bootstrap 5 components
+- **Icons:** Font Awesome 6 for consistent iconography
+- **Branding:** Custom favicon (user-management-icon.jpg) on all pages
 
-- **Layout:** A centered form on a clean background.
+## 3. Page Designs
+
+### 3.1. Landing Page (index.html)
+
+- **Layout:** Hero section with modern gradient background
 - **Elements:**
-  - Application Logo
-  - "Sign Up" Heading
-  - Username Input Field
+  - Application Logo and Favicon
+  - Welcome message and service description
+  - Service status indicators
+  - Navigation buttons to Sign Up and Login
+  - Professional gradient design with hover effects
+
+### 3.2. Sign-Up Page (signup.html)
+
+- **Layout:** Centered form with modern card design
+- **Elements:**
+  - Application Logo and Favicon
+  - "Create Account" Heading
+  - Username Input Field with validation
+  - Email Input Field with format validation
+  - Password Input Field with strength indicator
+  - First Name and Last Name (optional)
+  - Real-time validation feedback
+  - "Create Account" Button with loading states
+  - Link to Login Page
+
+### 3.3. Login Page (login.html)
+
+- **Layout:** Similar to sign-up page, centered form with card design
+- **Elements:**
+  - Application Logo and Favicon
+  - "Sign In" Heading
   - Email Input Field
   - Password Input Field
-  - "Sign Up" Button
-  - Link to Login Page ("Already have an account? Log in")
+  - "Sign In" Button with loading states
+  - Link to Sign-Up Page
+  - Error handling with user-friendly messages
 
-### 2.2. Login Page
+### 3.4. Profile Page (profile.html)
 
-- **Layout:** Similar to the sign-up page, a centered form.
+- **Layout:** Single-column responsive layout with header and content sections
 - **Elements:**
-  - Application Logo
-  - "Login" Heading
-  - Email/Username Input Field
-  - Password Input Field
-  - "Login" Button
-  - Link to Sign-Up Page ("Don't have an account? Sign up")
-
-### 2.3. User Main Page (Profile Page)
-
-- **Layout:** A two-column layout might be effective.
-  - **Left Column:** User's avatar and name.
-  - **Right Column:** User's details (year of birth, description).
-- **Elements:**
-  - **Header:**
-    - Application Logo
-    - "Logout" Button
+  - **Header Section:**
+    - Application Logo and Favicon
+    - User avatar (with upload functionality)
+    - Username and email display
+    - Navigation and logout options
   - **Profile Section:**
-    - Avatar Image
-    - Username
-    - Year of Birth
-    - Description
-    - "Edit Profile" Button
+    - View/Edit mode toggle
+    - User information display (readonly/editable)
+    - Avatar upload with drag-and-drop support
+    - Form validation and error handling
+    - Save/Cancel buttons with confirmation dialogs
+    - Account deletion option with safety confirmations
 
 ### 2.4. Edit Profile Modal/Page
 

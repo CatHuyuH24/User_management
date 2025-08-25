@@ -23,37 +23,51 @@ A complete full-stack web application for user management with sign-up, login, a
 
 ```
 user_management/
-├── backend/
-│   ├── services/
-│   │   └── user-service/
-│   │       ├── app/
-│   │       │   ├── __init__.py
-│   │       │   ├── main.py              # FastAPI application
-│   │       │   ├── database.py          # Database connection
-│   │       │   ├── models.py            # SQLAlchemy models
-│   │       │   ├── schemas.py           # Pydantic schemas
-│   │       │   ├── crud.py              # Database operations
-│   │       │   ├── auth.py              # Authentication utilities
-│   │       │   └── utils.py             # Helper functions
-│   │       ├── requirements.txt         # Python dependencies
-│   │       └── Dockerfile               # Container configuration
-│   ├── docker-compose.yml              # Multi-service orchestration
-│   └── init.sql                         # Database initialization
+├── services/
+│   └── user-service/
+│       ├── app/
+│       │   ├── api/v1/                  # API endpoints
+│       │   │   ├── auth.py              # Authentication endpoints
+│       │   │   ├── users.py             # User management endpoints
+│       │   │   └── endpoints.py         # Router configuration
+│       │   ├── core/                    # Core configuration
+│       │   ├── db/                      # Database configuration
+│       │   ├── models/                  # SQLAlchemy models
+│       │   │   └── user.py              # User model
+│       │   ├── schemas/                 # Pydantic schemas
+│       │   │   └── user.py              # User schemas
+│       │   ├── services/                # Business logic
+│       │   └── main.py                  # FastAPI application
+│       ├── requirements.txt             # Python dependencies
+│       └── Dockerfile                   # Container configuration
 ├── frontend/
 │   ├── index.html                       # Landing page
 │   ├── signup.html                      # User registration
 │   ├── login.html                       # User authentication
 │   ├── profile.html                     # User profile management
 │   ├── server.html                      # Server information
+│   ├── images/
+│   │   └── user-management-icon.jpg     # Favicon
 │   ├── js/
 │   │   ├── common.js                    # Shared utilities
 │   │   ├── signup.js                    # Registration logic
 │   │   ├── login.js                     # Authentication logic
 │   │   └── profile.js                   # Profile management
 │   └── frontend_server.py              # Development server
-├── Database_Schema.md                   # Database design documentation
+├── docker-compose.yml                  # Multi-service orchestration
+├── docs/                               # Project documentation
+├── init.sh                             # Initialization script (Unix/Linux)
+├── init.bat                            # Initialization script (Windows)
 └── README.md                           # This file
 ```
+
+│ │ ├── login.js # Authentication logic
+│ │ └── profile.js # Profile management
+│ └── frontend_server.py # Development server
+├── Database_Schema.md # Database design documentation
+└── README.md # This file
+
+````
 
 ## 🚀 Quick Start
 
@@ -62,12 +76,29 @@ user_management/
 - Docker and Docker Compose
 - Python 3.9+ (for frontend server)
 
+### Option 1: Automated Setup (Recommended)
+
+Use the initialization script for easy setup:
+
+**Windows:**
+```cmd
+init.bat
+````
+
+**Unix/Linux/macOS:**
+
+```bash
+chmod +x init.sh
+./init.sh
+```
+
+### Option 2: Manual Setup
+
 ### 1. Start Backend Services
 
-Navigate to the backend directory and start the services:
+Navigate to the root directory and start the services:
 
 ```powershell
-cd backend
 docker-compose up --build
 ```
 
@@ -139,11 +170,67 @@ The frontend will be available at `http://localhost:3000`
    docker-compose down
    ```
 
-### API Endpoints
+## 📚 API Endpoints
+
+### Authentication
+
+- `POST /api/v1/auth/signup` - User registration
+- `POST /api/v1/auth/login` - User login
+- `GET /api/v1/auth/verify-token` - Token verification
+
+### User Management
+
+- `GET /api/v1/users/me` - Get user profile (authenticated)
+- `PUT /api/v1/users/me` - Update user profile (authenticated)
+- `POST /api/v1/users/me/avatar` - Upload user avatar (authenticated)
+- `DELETE /api/v1/users/me` - Delete user account (authenticated)
+
+### System
 
 - `GET /` - Welcome message
+- `GET /health` - Health check
 - `GET /docs` - API documentation (Swagger UI)
 - `GET /redoc` - Alternative API documentation
+
+## 🔐 Security Features
+
+- **Password Hashing**: bcrypt with salt rounds
+- **JWT Authentication**: Secure token-based authentication
+- **Token Expiration**: 30-minute token lifetime
+- **Input Validation**: Comprehensive request validation
+- **CORS Support**: Configurable cross-origin requests
+- **File Upload Security**: Avatar upload with type and size validation
+
+## 💻 Frontend Features
+
+### Landing Page (`index.html`)
+
+- Service status checking
+- Navigation to all application features
+- Responsive design with modern UI
+- Custom favicon
+
+### Sign-up Page (`signup.html`)
+
+- Real-time form validation
+- Password strength indicator
+- Duplicate email checking
+- Automatic redirect after successful registration
+
+### Login Page (`login.html`)
+
+- User authentication
+- JWT token management
+- Remember login state
+- Redirect to profile after login
+
+### Profile Page (`profile.html`)
+
+- View/edit user information
+- **Avatar upload and management**
+- Account management
+- Secure logout functionality
+- Delete account option
 
 ### Database
 

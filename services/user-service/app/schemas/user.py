@@ -59,6 +59,7 @@ class UserUpdate(BaseModel):
     last_name: Optional[str] = Field(None, max_length=100)
     year_of_birth: Optional[int] = Field(None, ge=1900, le=2024)
     description: Optional[str] = Field(None, max_length=1000)
+    avatar_url: Optional[str] = Field(None, max_length=500, description="URL or path to user's avatar image")
 
 # Schema for password change
 class PasswordChange(BaseModel):

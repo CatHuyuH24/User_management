@@ -4,6 +4,7 @@ from api.v1.endpoints import router as api_router
 from core.config import settings
 from db.session import engine
 from models.user import User
+import os
 
 # Create database tables
 User.metadata.create_all(bind=engine)
@@ -27,6 +28,16 @@ app.add_middleware(
 
 # Include API routes
 app.include_router(api_router, prefix=settings.API_V1_STR)
+
+# Mount static files for avatar uploads
+uploads_dir = "/app/uploads"
+os.makedirs(f"{uploads_dir}/avatars", exist_ok=True)
+try:
+    from fastapi.staticfiles import StaticFiles
+    app.mount("/static", StaticFiles(directory=uploads_dir), name="static")
+except ImportError:
+    # Handle case where StaticFiles is not available
+    pass
 
 @app.get("/")
 def read_root():
