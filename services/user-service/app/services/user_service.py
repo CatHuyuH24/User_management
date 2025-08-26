@@ -37,7 +37,7 @@ class UserService:
                 first_name=user_create.first_name,
                 last_name=user_create.last_name,
                 is_active=True,
-                is_verified=False
+                is_verified=True  # Users are verified by default (no email verification required)
             )
             
             db.add(db_user)

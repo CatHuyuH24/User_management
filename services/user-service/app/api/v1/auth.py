@@ -37,9 +37,9 @@ async def signup(user_create: UserCreate, db: Session = Depends(get_db)):
         user_response = UserResponse.model_validate(user)
         
         return UserCreateResponse(
-            message="User created successfully. Please verify your email address.",
+            message="User created successfully. You can now log in.",
             user=user_response,
-            verification_required=True
+            verification_required=False
         )
     
     except HTTPException:
@@ -57,26 +57,35 @@ async def login(user_login: UserLogin, db: Session = Depends(get_db)):
     Authenticate user and return access token.
     For users with MFA enabled, returns a temporary token requiring MFA verification.
     
-    - **email**: Registered email address
+    - **username** or **email**: Username or registered email address
     - **password**: User password
     """
     try:
-        # Authenticate user
-        user = auth_service.authenticate_user(db, user_login.email, user_login.password)
+        # Determine if the login identifier is an email or username
+        login_identifier = user_login.email if user_login.email else user_login.username
+        
+        if not login_identifier:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Either username or email must be provided",
+            )
+        
+        # Authenticate user using flexible method
+        user = auth_service.authenticate_user_flexible(db, login_identifier, user_login.password)
         
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Incorrect email or password",
+                detail="Incorrect username/email or password",
                 headers={"WWW-Authenticate": "Bearer"},
             )
         
-        # Check if user is verified
-        if not user.is_verified:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Please verify your email address before logging in",
-            )
+        # Skip email verification requirement for now
+        # if not user.is_verified:
+        #     raise HTTPException(
+        #         status_code=status.HTTP_401_UNAUTHORIZED,
+        #         detail="Please verify your email address before logging in",
+        #     )
         
         # Check if MFA is enabled
         if user.mfa_enabled:

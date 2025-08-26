@@ -121,7 +121,7 @@ fi
 # Start frontend server in background
 echo "🌐 Starting frontend server..."
 cd frontend
-$PYTHON_CMD frontend_server.py &
+$PYTHON_CMD -m http.server 3001 &
 FRONTEND_PID=$!
 cd ..
 
@@ -130,7 +130,7 @@ sleep 3
 
 # Test frontend
 echo "🧪 Testing frontend server..."
-if curl -f http://localhost:3000 > /dev/null 2>&1; then
+if curl -f http://localhost:3001 > /dev/null 2>&1; then
     echo "✅ Frontend server is running successfully!"
 else
     echo "❌ Frontend server failed to start"
@@ -140,41 +140,47 @@ else
 fi
 
 echo ""
-echo "🎉 Enhanced User Management System initialization complete!"
+echo "🎉 Enhanced User Management & Library System initialization complete!"
 echo ""
-echo "=" * 60
+echo "=================================================================="
 echo "    SYSTEM ACCESS INFORMATION"
-echo "=" * 60
+echo "=================================================================="
 echo ""
 echo "📱 Application Access:"
-echo "   • Client Portal:   http://localhost:3000"
-echo "   • Admin Portal:    http://localhost:3000/admin"
+echo "   • Home Page:       http://localhost:3001"
+echo "   • Client Portal:   http://localhost:3001/client-dashboard.html"
+echo "   • Admin Portal:    http://localhost:3001/admin-dashboard.html"
 echo "   • Backend API:     http://localhost:8000"
 echo "   • API Docs:        http://localhost:8000/docs"
 echo "   • Health Check:    http://localhost:8000/health"
 echo ""
 echo "👤 Default Admin Account:"
+echo "   • Username:  HuyAdminnh"
 echo "   • Email:     uynhhuc810@gmail.com"
 echo "   • Password:  aAdDmMiInna33%$"
-echo "   • Username:  super_admin"
 echo "   • Role:      Super Admin"
 echo ""
 echo "🔐 Security Features:"
 echo "   • Multi-Factor Authentication (MFA) - Setup required on first login"
 echo "   • Role-based Access Control (RBAC)"
 echo "   • Email Verification System"
-echo "   • Password Reset Functionality"
+echo "   • JWT Token-based Authentication"
 echo ""
-echo "📚 Available Features:"
-echo "   • User Registration & Authentication"
-echo "   • User Profile Management"
-echo "   • Admin User Management & Deletion"
-echo "   • Library Management System"
+echo "📚 Client Portal Features:"
+echo "   • Browse & Search Digital Library"
 echo "   • Book Borrowing & Returns"
-echo "   • Email Notification System"
-echo "   • Audit Trail & Logging"
+echo "   • Personal Reading Dashboard"
+echo "   • Due Date Notifications"
+echo "   • Profile Management"
 echo ""
-echo "🔧 Management Commands:"
+echo "🔧 Admin Portal Features:"
+echo "   • Complete User Management (CRUD)"
+echo "   • Library Catalog Administration"
+echo "   • Loan Monitoring & Reports"
+echo "   • System Analytics Dashboard"
+echo "   • Bulk Operations & Data Export"
+echo ""
+echo "�️  Management Commands:"
 echo "   • Stop backend:     docker-compose down"
 echo "   • View logs:        docker-compose logs user-service"
 echo "   • Stop frontend:    kill $FRONTEND_PID"
@@ -188,4 +194,6 @@ echo "   • Change the default admin password after first login"
 echo "   • Set up MFA for the admin account for enhanced security" 
 echo "   • Configure SMTP settings for email functionality"
 echo "   • Review and update security settings for production"
+echo "   • Admin users are automatically redirected to admin portal"
+echo "   • Client users access the library through client portal"
 echo ""

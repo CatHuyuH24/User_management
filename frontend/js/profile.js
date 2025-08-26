@@ -17,7 +17,7 @@ async function loadUserProfile() {
   showLoading(true);
 
   try {
-    userProfile = await apiCall('/users/me', {
+    userProfile = await apiCall('/me', {
       method: 'GET',
     });
 

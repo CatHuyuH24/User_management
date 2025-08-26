@@ -78,3 +78,7 @@ This project is a user management web application built with a microservices arc
 - [User Stories](docs/User_Stories.md)
 - [UI/UX Design](docs/UI_UX.md)
 - [User Stories](docs/User_Stories.md)
+
+## 6. Notes
+
+- When suggesting Terminal command, always go for WindowsPowershell command and syntax

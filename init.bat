@@ -139,15 +139,15 @@ echo    • API Docs:        http://localhost:8000/docs
 echo    • Health Check:    http://localhost:8000/health
 echo.
 echo 👤 Default Admin Account:
+echo    • Username:  HuyAdminnh
 echo    • Email:     uynhhuc810@gmail.com
 echo    • Password:  aAdDmMiInna33%$
-echo    • Username:  super_admin
 echo    • Role:      Super Admin
 echo.
 echo 🔐 Security Features:
 echo    • Multi-Factor Authentication (MFA) - Setup required on first login
 echo    • Role-based Access Control (RBAC)
-echo    • Email Verification System
+echo    • Username or Email-based Authentication
 echo    • Password Reset Functionality
 echo.
 echo 📚 Available Features:

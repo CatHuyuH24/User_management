@@ -40,10 +40,34 @@ class AuthService:
         """Hash a password"""
         return pwd_context.hash(password)
     
-    def authenticate_user(self, db: Session, email: str, password: str) -> Union[User, bool]:
-        """Authenticate user with email and password"""
+    def authenticate_user(self, db: Session, identifier: str, password: str, is_email: bool = True) -> Union[User, bool]:
+        """Authenticate user with email or username and password"""
         try:
-            user = db.query(User).filter(User.email == email).first()
+            if is_email:
+                user = db.query(User).filter(User.email == identifier).first()
+            else:
+                user = db.query(User).filter(User.username == identifier).first()
+                
+            if not user:
+                return False
+            if not user.is_active:
+                return False
+            if not self.verify_password(password, user.hashed_password):
+                return False
+            return user
+        except Exception as e:
+            logger.error(f"Error authenticating user: {str(e)}")
+            return False
+            
+    def authenticate_user_flexible(self, db: Session, username_or_email: str, password: str) -> Union[User, bool]:
+        """Authenticate user with either username or email"""
+        try:
+            # First try email
+            user = db.query(User).filter(User.email == username_or_email).first()
+            if not user:
+                # Try username
+                user = db.query(User).filter(User.username == username_or_email).first()
+                
             if not user:
                 return False
             if not user.is_active:

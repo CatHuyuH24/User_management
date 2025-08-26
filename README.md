@@ -1,4 +1,4 @@
-# Enhanced User Management System
+# Enhanced User Management & Library System
 
 A comprehensive user management system with Multi-Factor Authentication (MFA), Admin Portal, and Library Management capabilities built with FastAPI, PostgreSQL, and modern web technologies.
 
@@ -12,28 +12,40 @@ A comprehensive user management system with Multi-Factor Authentication (MFA), A
 - **Email Verification** - Account verification via email
 - **Password Security** - Strong password requirements and secure hashing
 
+### Client Portal
+
+- **Digital Library Access** - Browse and search extensive book collection
+- **Book Borrowing & Returns** - Seamless borrowing process with due date tracking
+- **Personal Dashboard** - View borrowed books, due dates, and reading history
+- **Notifications Center** - Due date reminders and library announcements
+- **Profile Management** - Update personal information and preferences
+- **Mobile Responsive** - Full functionality on all devices
+
 ### Admin Portal
 
-- **User Management** - Create, update, delete, and manage users
-- **Bulk Operations** - Perform actions on multiple users simultaneously
+- **User Management** - Create, update, delete, and manage all users
+- **Library Administration** - Complete book catalog management
+- **Loan Monitoring** - Track all borrowing activities and overdue books
+- **Analytics Dashboard** - Comprehensive statistics and reports
+- **Bulk Operations** - Perform actions on multiple users/books simultaneously
 - **Audit Trail** - Track all admin actions and changes
-- **Dashboard** - Comprehensive statistics and monitoring
-- **User Deletion** - Soft/hard delete with recovery options
 
 ### Library Management
 
 - **Book Catalog** - Complete book management with ISBN, categories, and metadata
-- **Loan System** - Book borrowing with due dates and fine calculation
 - **Inventory Tracking** - Real-time availability and copy management
-- **Search & Filtering** - Advanced book search capabilities
-- **Overdue Management** - Automated notifications and fine calculation
+- **Loan System** - Book borrowing with due dates and renewal options
+- **Search & Filtering** - Advanced book search by title, author, genre, and availability
+- **Overdue Management** - Automated notifications and tracking
+- **Categories & Collections** - Organize books by genre, topic, and collections
 
-### Notification System
+### Security Features
 
-- **Email Notifications** - Welcome emails, reminders, and alerts
-- **In-App Notifications** - Real-time user notifications
-- **Template System** - Customizable email templates
-- **Bulk Messaging** - Admin broadcast capabilities
+- **JWT Authentication** - Secure token-based authentication
+- **Role-Based Authorization** - Granular permission system
+- **Password Encryption** - Bcrypt hashing with salt
+- **Session Management** - Secure session handling
+- **Input Validation** - Comprehensive data validation and sanitization
 
 ## 🏗️ Architecture
 
@@ -174,10 +186,12 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 After running the setup script, you'll have access to:
 
+- **Username**: `HuyAdminnh`
 - **Email**: `uynhhuc810@gmail.com`
 - **Password**: `aAdDmMiInna33%$`
 - **Role**: Super Admin
 
+**Login**: Use either username or email with the password above.
 **Important**: Change this password immediately after first login!
 
 ### Email Configuration
@@ -208,9 +222,11 @@ Once the service is running, access the interactive API documentation:
 
 #### Authentication
 
-- `POST /api/v1/signup` - User registration
-- `POST /api/v1/login` - User login (returns MFA token if enabled)
+- `POST /api/v1/signup` - User registration (no email verification required)
+- `POST /api/v1/login` - User login with username or email (returns MFA token if enabled)
 - `POST /api/v1/auth/mfa/verify` - Complete MFA verification
+
+**Login Methods**: Users can log in using either their username or email address with their password.
 
 #### MFA Management
 
@@ -237,6 +253,62 @@ Once the service is running, access the interactive API documentation:
 - `GET /api/v1/notifications/` - Get user notifications
 - `PUT /api/v1/notifications/{id}/read` - Mark as read
 - `POST /api/v1/notifications/admin/send` - Send notification (Admin)
+
+## 🖥️ Frontend Application
+
+### Features
+
+The frontend application provides comprehensive web interfaces for both clients and administrators.
+
+#### Client Portal (`client-dashboard.html`)
+
+- **Dashboard Overview** - Personal library statistics and activity
+- **Book Browser** - Search and filter books with advanced options
+- **My Books** - Manage borrowed books, renewals, and returns
+- **Notifications** - Due date reminders and library announcements
+- **Profile Management** - Update personal information
+
+#### Admin Portal (`admin-dashboard.html`)
+
+- **Admin Dashboard** - System statistics and monitoring
+- **User Management** (`admin-users.html`) - CRUD operations for all users
+- **Library Management** (`admin-library.html`) - Complete book catalog administration
+- **Analytics** - Borrowing patterns and system usage reports
+
+### Access Points
+
+- **Home Page**: `http://localhost:3001/` - Welcome page with registration/login
+- **Login**: `http://localhost:3001/login.html` - Authentication page
+- **Registration**: `http://localhost:3001/signup.html` - New user registration
+- **Client Portal**: `http://localhost:3001/client-dashboard.html` - Main client interface
+- **Admin Portal**: `http://localhost:3001/admin-dashboard.html` - Administrative interface
+
+### Role-Based Navigation
+
+The application automatically redirects users based on their role:
+
+- **Clients**: Redirected to client dashboard after login
+- **Admin/Super Admin**: Redirected to admin dashboard after login
+- **Unauthenticated**: Redirected to login page
+
+### Technical Features
+
+- **Responsive Design** - Mobile-friendly Bootstrap 5 interface
+- **Real-time Updates** - Dynamic content loading and updates
+- **Form Validation** - Client-side and server-side validation
+- **Error Handling** - Comprehensive error messages and recovery
+- **Security** - JWT token-based authentication with automatic refresh
+
+### Development Server
+
+To run the frontend development server:
+
+```bash
+cd frontend
+python -m http.server 3001
+```
+
+Access the application at `http://localhost:3001`
 
 ## 🧪 Testing
 

@@ -110,7 +110,7 @@ async function submitSignup() {
       last_name: document.getElementById('lastName').value.trim() || null,
     };
 
-    const response = await apiCall('/auth/signup', {
+    const response = await apiCall('/signup', {
       method: 'POST',
       body: JSON.stringify(formData),
     });

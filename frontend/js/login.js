@@ -1,6 +1,32 @@
 // Login page functionality
 
 document.addEventListener('DOMContentLoaded', function () {
+  console.log('DOM loaded, initializing login page');
+
+  // Check if all required elements exist
+  const form = document.getElementById('loginForm');
+  const username = document.getElementById('username');
+  const password = document.getElementById('password');
+
+  console.log('Form element:', form);
+  console.log('Username element:', username);
+  console.log('Password element:', password);
+
+  if (!form) {
+    console.error('Critical: Login form not found!');
+    return;
+  }
+
+  if (!username) {
+    console.error('Critical: Username field not found!');
+    return;
+  }
+
+  if (!password) {
+    console.error('Critical: Password field not found!');
+    return;
+  }
+
   // Redirect if already authenticated
   redirectIfAuthenticated();
 
@@ -12,8 +38,14 @@ document.addEventListener('DOMContentLoaded', function () {
 function initializeLoginForm() {
   const form = document.getElementById('loginForm');
 
+  if (!form) {
+    console.error('Login form not found during initialization');
+    return;
+  }
+
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
+    console.log('Form submitted');
 
     if (validateForm()) {
       await submitLogin();
@@ -22,27 +54,43 @@ function initializeLoginForm() {
 
   // Real-time validation
   const inputs = form.querySelectorAll('input');
+  console.log(`Found ${inputs.length} input fields`);
   inputs.forEach((input) => {
-    input.addEventListener('blur', () => validateField(input.name));
+    input.addEventListener('blur', () => validateField(input.id));
     input.addEventListener('input', () => clearFieldError(input.id));
   });
 }
 
 function validateForm() {
   const form = document.getElementById('loginForm');
+  if (!form) {
+    console.error('Login form not found');
+    return false;
+  }
+
   clearAllErrors(form);
 
   let isValid = true;
 
-  // Validate email
-  const email = document.getElementById('email').value.trim();
-  if (!validateEmail(email)) {
-    setFieldError('email', 'Please enter a valid email address');
+  // Validate username
+  const usernameElement = document.getElementById('username');
+  if (!usernameElement) {
+    console.error('Username field not found');
+    return false;
+  }
+  const username = usernameElement.value.trim();
+  if (!username) {
+    setFieldError('username', 'Please enter your username');
     isValid = false;
   }
 
   // Validate password
-  const password = document.getElementById('password').value;
+  const passwordElement = document.getElementById('password');
+  if (!passwordElement) {
+    console.error('Password field not found');
+    return false;
+  }
+  const password = passwordElement.value;
   if (!password) {
     setFieldError('password', 'Please enter your password');
     isValid = false;
@@ -51,26 +99,29 @@ function validateForm() {
   return isValid;
 }
 
-function validateField(fieldName) {
-  const field = document.getElementById(fieldName);
-  if (!field) return;
+function validateField(fieldId) {
+  const field = document.getElementById(fieldId);
+  if (!field) {
+    console.warn(`Field with ID '${fieldId}' not found`);
+    return;
+  }
 
   const value = field.value.trim();
 
-  switch (fieldName) {
-    case 'email':
-      if (!validateEmail(value) && value) {
-        setFieldError(fieldName, 'Please enter a valid email address');
-      } else if (value) {
-        clearFieldError(fieldName);
+  switch (fieldId) {
+    case 'username':
+      if (!value) {
+        setFieldError(fieldId, 'Please enter your username');
+      } else {
+        clearFieldError(fieldId);
       }
       break;
 
     case 'password':
       if (!value) {
-        setFieldError(fieldName, 'Please enter your password');
+        setFieldError(fieldId, 'Please enter your password');
       } else {
-        clearFieldError(fieldName);
+        clearFieldError(fieldId);
       }
       break;
   }
@@ -80,12 +131,21 @@ async function submitLogin() {
   showLoading(true);
 
   try {
+    const usernameElement = document.getElementById('username');
+    const passwordElement = document.getElementById('password');
+
+    if (!usernameElement || !passwordElement) {
+      throw new Error('Form fields not found');
+    }
+
     const formData = {
-      email: document.getElementById('email').value.trim(),
-      password: document.getElementById('password').value,
+      username: usernameElement.value.trim(),
+      password: passwordElement.value,
     };
 
-    const response = await apiCall('/auth/login', {
+    console.log('Submitting login with username:', formData.username);
+
+    const response = await apiCall('/login', {
       method: 'POST',
       body: JSON.stringify(formData),
     });
@@ -93,18 +153,27 @@ async function submitLogin() {
     // Save the authentication token
     saveAuthToken(response.access_token);
 
-    showAlert('Login successful! Redirecting to your profile...', 'success');
+    // Get user profile to determine redirect destination
+    const profile = await apiCall('/me', {
+      method: 'GET',
+    });
 
-    // Redirect to profile page after 1 second
+    showAlert('Login successful! Redirecting...', 'success');
+
+    // Redirect based on user role
     setTimeout(() => {
-      window.location.href = 'profile.html';
+      if (profile.role === 'admin' || profile.role === 'super_admin') {
+        window.location.href = 'admin-dashboard.html';
+      } else {
+        window.location.href = 'client-dashboard.html';
+      }
     }, 1000);
   } catch (error) {
     let errorMessage =
       'Login failed. Please check your credentials and try again.';
 
-    if (error.message.includes('Incorrect email or password')) {
-      errorMessage = 'Incorrect email or password. Please try again.';
+    if (error.message.includes('Incorrect username/email or password')) {
+      errorMessage = 'Incorrect username or password. Please try again.';
     } else if (error.message.includes('Inactive user')) {
       errorMessage =
         'Your account has been deactivated. Please contact support.';
@@ -122,12 +191,19 @@ function initializePasswordToggle() {
   const toggleButton = document.getElementById('togglePassword');
   const passwordField = document.getElementById('password');
 
+  if (!toggleButton || !passwordField) {
+    console.warn('Password toggle elements not found');
+    return;
+  }
+
   toggleButton.addEventListener('click', function () {
     const type =
       passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
     passwordField.setAttribute('type', type);
 
     const icon = this.querySelector('i');
-    icon.className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+    if (icon) {
+      icon.className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+    }
   });
 }

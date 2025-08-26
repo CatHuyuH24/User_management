@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, validator, Field
+from pydantic import BaseModel, EmailStr, validator, Field, model_validator
 from typing import Optional, List
 from datetime import datetime
 from enum import Enum
@@ -38,10 +38,22 @@ class UserCreate(BaseModel):
             raise ValueError('Password must contain at least one special character')
         return v
 
-# Schema for user login (now includes MFA flow)
+# Schema for user login (supports both username and email)
 class UserLogin(BaseModel):
-    email: EmailStr
-    password: str
+    username: Optional[str] = Field(None, description="Username for login")
+    email: Optional[EmailStr] = Field(None, description="Email for login")
+    password: str = Field(..., description="User password")
+    
+    @model_validator(mode='before')
+    @classmethod
+    def validate_login_credentials(cls, values):
+        # At least one of username or email must be provided
+        if isinstance(values, dict):
+            username = values.get('username')
+            email = values.get('email')
+            if not username and not email:
+                raise ValueError('Either username or email must be provided')
+        return values
 
 # Schema for MFA verification
 class MFAVerify(BaseModel):
