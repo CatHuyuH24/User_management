@@ -1,252 +1,397 @@
-# User Management Web Application
+# Enhanced User Management System
 
-A complete full-stack web application for user management with sign-up, login, and profile management features.
+A comprehensive user management system with Multi-Factor Authentication (MFA), Admin Portal, and Library Management capabilities built with FastAPI, PostgreSQL, and modern web technologies.
+
+## 🚀 Features
+
+### Core Features
+
+- **User Registration & Authentication** - Secure user signup/login with JWT tokens
+- **Multi-Factor Authentication (MFA)** - TOTP-based 2FA with QR codes and backup codes
+- **Role-Based Access Control** - Client, Admin, and Super Admin roles
+- **Email Verification** - Account verification via email
+- **Password Security** - Strong password requirements and secure hashing
+
+### Admin Portal
+
+- **User Management** - Create, update, delete, and manage users
+- **Bulk Operations** - Perform actions on multiple users simultaneously
+- **Audit Trail** - Track all admin actions and changes
+- **Dashboard** - Comprehensive statistics and monitoring
+- **User Deletion** - Soft/hard delete with recovery options
+
+### Library Management
+
+- **Book Catalog** - Complete book management with ISBN, categories, and metadata
+- **Loan System** - Book borrowing with due dates and fine calculation
+- **Inventory Tracking** - Real-time availability and copy management
+- **Search & Filtering** - Advanced book search capabilities
+- **Overdue Management** - Automated notifications and fine calculation
+
+### Notification System
+
+- **Email Notifications** - Welcome emails, reminders, and alerts
+- **In-App Notifications** - Real-time user notifications
+- **Template System** - Customizable email templates
+- **Bulk Messaging** - Admin broadcast capabilities
 
 ## 🏗️ Architecture
-
-### Backend
-
-- **Framework**: FastAPI 0.104.1
-- **Database**: PostgreSQL 13
-- **Authentication**: JWT tokens with bcrypt password hashing
-- **Containerization**: Docker & Docker Compose
-- **API Documentation**: Automatic OpenAPI/Swagger docs
-
-### Frontend
-
-- **Framework**: Vanilla JavaScript with Bootstrap 5
-- **Styling**: Responsive design with custom CSS
-- **Icons**: Font Awesome 6
-- **Server**: Python HTTP server with CORS support
-
-## 📁 Project Structure
 
 ```
 user_management/
 ├── services/
 │   └── user-service/
 │       ├── app/
-│       │   ├── api/v1/                  # API endpoints
-│       │   │   ├── auth.py              # Authentication endpoints
-│       │   │   ├── users.py             # User management endpoints
-│       │   │   └── endpoints.py         # Router configuration
-│       │   ├── core/                    # Core configuration
-│       │   ├── db/                      # Database configuration
-│       │   ├── models/                  # SQLAlchemy models
-│       │   │   └── user.py              # User model
-│       │   ├── schemas/                 # Pydantic schemas
-│       │   │   └── user.py              # User schemas
-│       │   ├── services/                # Business logic
-│       │   └── main.py                  # FastAPI application
-│       ├── requirements.txt             # Python dependencies
-│       └── Dockerfile                   # Container configuration
-├── frontend/
-│   ├── index.html                       # Landing page
-│   ├── signup.html                      # User registration
-│   ├── login.html                       # User authentication
-│   ├── profile.html                     # User profile management
-│   ├── server.html                      # Server information
-│   ├── images/
-│   │   └── user-management-icon.jpg     # Favicon
-│   ├── js/
-│   │   ├── common.js                    # Shared utilities
-│   │   ├── signup.js                    # Registration logic
-│   │   ├── login.js                     # Authentication logic
-│   │   └── profile.js                   # Profile management
-│   └── frontend_server.py              # Development server
-├── docker-compose.yml                  # Multi-service orchestration
-├── docs/                               # Project documentation
-├── init.sh                             # Initialization script (Unix/Linux)
-├── init.bat                            # Initialization script (Windows)
-└── README.md                           # This file
+│       │   ├── api/           # API endpoints
+│       │   │   ├── v1/        # Version 1 API
+│       │   │   ├── admin.py   # Admin management
+│       │   │   ├── library.py # Library management
+│       │   │   ├── mfa.py     # Multi-factor auth
+│       │   │   └── notifications.py
+│       │   ├── core/          # Core configuration
+│       │   ├── models/        # Database models
+│       │   ├── schemas/       # Pydantic schemas
+│       │   ├── services/      # Business logic
+│       │   └── templates/     # Email templates
+│       ├── scripts/           # Utility scripts
+│       └── requirements.txt
+├── frontend/                  # Frontend application
+├── docs/                      # Documentation
+└── docker-compose.yml
 ```
 
-│ │ ├── login.js # Authentication logic
-│ │ └── profile.js # Profile management
-│ └── frontend_server.py # Development server
-├── Database_Schema.md # Database design documentation
-└── README.md # This file
+## 🛠️ Technology Stack
 
-````
+- **Backend**: FastAPI 0.104.1, Python 3.9+
+- **Database**: PostgreSQL 13+
+- **Authentication**: JWT with MFA (TOTP)
+- **Email**: SMTP with HTML templates
+- **Security**: bcrypt, pyotp, rate limiting
+- **Documentation**: OpenAPI/Swagger
+- **Containerization**: Docker & Docker Compose
+
+## 📋 Prerequisites
+
+- Python 3.9 or higher
+- PostgreSQL 13 or higher
+- Docker and Docker Compose (optional)
+- SMTP server for email functionality
 
 ## 🚀 Quick Start
 
-### Prerequisites
-
-- Docker and Docker Compose
-- Python 3.9+ (for frontend server)
-
-### Option 1: Automated Setup (Recommended)
-
-Use the initialization script for easy setup:
-
-**Windows:**
-```cmd
-init.bat
-````
-
-**Unix/Linux/macOS:**
+### 1. Clone the Repository
 
 ```bash
-chmod +x init.sh
-./init.sh
+git clone <repository-url>
+cd user_management
 ```
 
-### Option 2: Manual Setup
+### 2. Environment Setup
 
-### 1. Start Backend Services
+Create a `.env` file in the root directory:
 
-Navigate to the root directory and start the services:
+```env
+# Database Configuration
+DATABASE_URL=postgresql://user:password@localhost:5432/user_management_db
+POSTGRES_USER=user
+POSTGRES_PASSWORD=password
+POSTGRES_DB=user_management_db
 
-```powershell
-docker-compose up --build
+# Security
+SECRET_KEY=your-super-secret-key-here
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+MFA_TOKEN_EXPIRE_MINUTES=10
+
+# Application
+APP_NAME=User Management System
+VERSION=1.0.0
+API_V1_STR=/api/v1
+DEBUG=True
+
+# Email Configuration
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USERNAME=your-email@gmail.com
+SMTP_PASSWORD=your-app-password
+SMTP_USE_TLS=True
+FROM_EMAIL=noreply@yourapp.com
+FROM_NAME=User Management System
+
+# Redis (for background tasks)
+REDIS_URL=redis://localhost:6379/0
 ```
 
-This will start:
+### 3. Using Docker (Recommended)
 
-- PostgreSQL database on port 5432
-- FastAPI application on port 8000
+```bash
+# Start all services
+docker-compose up -d
 
-### 2. Start Frontend Server
+# View logs
+docker-compose logs -f user-service
 
-In a new terminal, navigate to the frontend directory:
-
-```powershell
-cd frontend
-python frontend_server.py
+# Stop services
+docker-compose down
 ```
 
-The frontend will be available at `http://localhost:3000`
+### 4. Manual Setup
 
-### 3. Access the Application
+#### Install Dependencies
 
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:8000
-- **API Documentation**: http://localhost:8000/docs
-- **Database**: localhost:5432 (user: admin, password: password123, db: user_management)
+```bash
+cd services/user-service
+pip install -r requirements.txt
+```
 
-### Option 2: Manual Setup
+#### Setup Database
 
-1. **Prerequisites:**
+```bash
+# Start PostgreSQL
+sudo systemctl start postgresql
 
-   - Docker
-   - Docker Compose
+# Create database
+createdb user_management_db
+```
 
-2. **Start the application:**
+#### Initialize Database and Create Admin
 
-   ```bash
-   docker-compose up --build -d
-   ```
+```bash
+# Run the admin creation script
+python scripts/create_admin.py
+```
 
-3. **Access the services:**
-   - API: http://localhost:8000
-   - API Documentation: http://localhost:8000/docs
-   - Interactive API: http://localhost:8000/redoc
+#### Start the Service
 
-## Development
+```bash
+cd services/user-service
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
 
-### Local Development Setup
+## 🔧 Configuration
 
-1. **Clone and navigate to project:**
+### Default Admin Account
 
-   ```bash
-   cd user_management
-   ```
+After running the setup script, you'll have access to:
 
-2. **Start services:**
+- **Email**: `uynhhuc810@gmail.com`
+- **Password**: `aAdDmMiInna33%$`
+- **Role**: Super Admin
 
-   ```bash
-   docker-compose up --build
-   ```
+**Important**: Change this password immediately after first login!
 
-3. **Check logs:**
+### Email Configuration
 
-   ```bash
-   docker-compose logs -f user-service
-   ```
+For Gmail SMTP:
 
-4. **Stop services:**
-   ```bash
-   docker-compose down
-   ```
+1. Enable 2-factor authentication
+2. Generate an app password
+3. Use the app password in `SMTP_PASSWORD`
 
-## 📚 API Endpoints
+### MFA Setup
 
-### Authentication
+Users can enable MFA by:
 
-- `POST /api/v1/auth/signup` - User registration
-- `POST /api/v1/auth/login` - User login
-- `GET /api/v1/auth/verify-token` - Token verification
+1. Going to their profile settings
+2. Scanning the QR code with an authenticator app
+3. Entering the verification code
+4. Saving the backup codes
 
-### User Management
+## 📚 API Documentation
 
-- `GET /api/v1/users/me` - Get user profile (authenticated)
-- `PUT /api/v1/users/me` - Update user profile (authenticated)
-- `POST /api/v1/users/me/avatar` - Upload user avatar (authenticated)
-- `DELETE /api/v1/users/me` - Delete user account (authenticated)
+Once the service is running, access the interactive API documentation:
 
-### System
+- **Swagger UI**: http://localhost:8000/docs
+- **ReDoc**: http://localhost:8000/redoc
 
-- `GET /` - Welcome message
-- `GET /health` - Health check
-- `GET /docs` - API documentation (Swagger UI)
-- `GET /redoc` - Alternative API documentation
+### Key Endpoints
 
-## 🔐 Security Features
+#### Authentication
 
-- **Password Hashing**: bcrypt with salt rounds
-- **JWT Authentication**: Secure token-based authentication
-- **Token Expiration**: 30-minute token lifetime
+- `POST /api/v1/signup` - User registration
+- `POST /api/v1/login` - User login (returns MFA token if enabled)
+- `POST /api/v1/auth/mfa/verify` - Complete MFA verification
+
+#### MFA Management
+
+- `POST /api/v1/auth/mfa/setup` - Setup MFA for user
+- `GET /api/v1/auth/mfa/status` - Get MFA status
+- `POST /api/v1/auth/mfa/disable` - Disable MFA
+
+#### Admin Portal
+
+- `GET /api/v1/admin/dashboard` - Admin dashboard stats
+- `GET /api/v1/admin/users` - List all users
+- `POST /api/v1/admin/users` - Create user as admin
+- `DELETE /api/v1/admin/users/{id}` - Delete user
+
+#### Library Management
+
+- `GET /api/v1/library/books` - List books
+- `POST /api/v1/library/books` - Add book (Admin)
+- `POST /api/v1/library/loans` - Borrow book
+- `PUT /api/v1/library/loans/{id}/return` - Return book
+
+#### Notifications
+
+- `GET /api/v1/notifications/` - Get user notifications
+- `PUT /api/v1/notifications/{id}/read` - Mark as read
+- `POST /api/v1/notifications/admin/send` - Send notification (Admin)
+
+## 🧪 Testing
+
+### Sample Users
+
+The setup script can create sample users for testing:
+
+- **john_client** / john@example.com / ClientPass123!
+- **jane_librarian** / jane@example.com / AdminPass123!
+- **bob_reader** / bob@example.com / ReaderPass123!
+
+### Testing MFA
+
+1. Login with a user account
+2. Setup MFA in profile settings
+3. Use Google Authenticator or similar app
+4. Test login with MFA verification
+
+### Testing Library System
+
+1. Login as admin
+2. Add books to the library
+3. Login as regular user
+4. Borrow and return books
+5. Check notifications for due dates
+
+## 🔒 Security Features
+
+- **Password Security**: Bcrypt hashing with salt
+- **JWT Tokens**: Secure token-based authentication
+- **MFA Protection**: TOTP-based two-factor authentication
+- **Rate Limiting**: Protection against brute force attacks
+- **Role-Based Access**: Granular permission control
 - **Input Validation**: Comprehensive request validation
-- **CORS Support**: Configurable cross-origin requests
-- **File Upload Security**: Avatar upload with type and size validation
+- **SQL Injection Protection**: ORM-based queries
 
-## 💻 Frontend Features
+## 📧 Email Templates
 
-### Landing Page (`index.html`)
+The system includes pre-built email templates for:
 
-- Service status checking
-- Navigation to all application features
-- Responsive design with modern UI
-- Custom favicon
+- Welcome emails
+- Email verification
+- Password reset
+- Book due reminders
+- Overdue notices
+- Admin notifications
 
-### Sign-up Page (`signup.html`)
+Templates are customizable and support variables.
 
-- Real-time form validation
-- Password strength indicator
-- Duplicate email checking
-- Automatic redirect after successful registration
+## 🔄 Database Schema
 
-### Login Page (`login.html`)
+The system uses multiple interconnected tables:
 
-- User authentication
-- JWT token management
-- Remember login state
-- Redirect to profile after login
+- **users** - User accounts and authentication
+- **mfa_secrets** - MFA secrets and backup codes
+- **email_verifications** - Email verification tokens
+- **books** - Book catalog and metadata
+- **book_categories** - Book categorization
+- **book_loans** - Borrowing and return tracking
+- **notifications** - User notifications and emails
 
-### Profile Page (`profile.html`)
+## 🚀 Deployment
 
-- View/edit user information
-- **Avatar upload and management**
-- Account management
-- Secure logout functionality
-- Delete account option
+### Production Considerations
 
-### Database
+1. **Environment Variables**: Use secure, production values
+2. **Database**: Use managed PostgreSQL service
+3. **Email**: Configure proper SMTP service
+4. **Redis**: Set up Redis for background tasks
+5. **HTTPS**: Enable SSL/TLS certificates
+6. **Rate Limiting**: Configure appropriate limits
+7. **Monitoring**: Set up logging and monitoring
 
-The project uses PostgreSQL running in a Docker container. Connection details:
+### Docker Production
 
-- Host: localhost (from host machine) / db (from containers)
-- Port: 5432
-- Database: db
-- Username: user
-- Password: password
+```bash
+# Build for production
+docker-compose -f docker-compose.prod.yml up -d
+```
 
-## Documentation
+## 📝 API Examples
 
-Detailed documentation is available in the `docs/` directory:
+### User Registration
 
-- **User Stories**: Requirements and user scenarios
-- **System Architecture**: Technical architecture overview
-- **API Specification**: Detailed API endpoint documentation
-- **UI/UX Design**: Frontend design specifications
+```bash
+curl -X POST "http://localhost:8000/api/v1/signup" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "newuser",
+    "email": "user@example.com",
+    "password": "SecurePass123!",
+    "first_name": "John",
+    "last_name": "Doe"
+  }'
+```
+
+### Login
+
+```bash
+curl -X POST "http://localhost:8000/api/v1/login" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "SecurePass123!"
+  }'
+```
+
+### Setup MFA
+
+```bash
+curl -X POST "http://localhost:8000/api/v1/auth/mfa/setup" \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{"verification_code": "123456"}'
+```
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+1. **Database Connection**: Check PostgreSQL is running and credentials are correct
+2. **Email Not Sending**: Verify SMTP configuration and credentials
+3. **MFA Setup Failed**: Ensure QR code is scanned correctly
+4. **Permission Denied**: Check user roles and authentication
+
+### Logs
+
+```bash
+# Docker logs
+docker-compose logs user-service
+
+# Application logs
+tail -f logs/app.log
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🙋‍♂️ Support
+
+For support and questions:
+
+- Create an issue on GitHub
+- Check the documentation in `/docs`
+- Review the API documentation at `/docs`
+
+---
+
+**Built with ❤️ using FastAPI and modern Python technologies**

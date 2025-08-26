@@ -1,6 +1,12 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, CheckConstraint
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, CheckConstraint, Enum
 from sqlalchemy.sql import func
-from db.session import Base
+from core.database import Base
+import enum
+
+class UserRole(enum.Enum):
+    CLIENT = "client"
+    ADMIN = "admin"
+    SUPER_ADMIN = "super_admin"
 
 class User(Base):
     __tablename__ = "users"
@@ -11,6 +17,8 @@ class User(Base):
     hashed_password = Column(String(255), nullable=False)
     is_active = Column(Boolean, default=True)
     is_verified = Column(Boolean, default=False)
+    role = Column(Enum(UserRole), default=UserRole.CLIENT, nullable=False)
+    mfa_enabled = Column(Boolean, default=False)
     
     # Timestamps
     created_at = Column(DateTime(timezone=True), server_default=func.now())

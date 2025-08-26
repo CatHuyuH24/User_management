@@ -26,6 +26,8 @@ CREATE TABLE users (
     hashed_password VARCHAR(255) NOT NULL,
     is_active BOOLEAN DEFAULT TRUE,
     is_verified BOOLEAN DEFAULT FALSE,
+    role VARCHAR(20) DEFAULT 'client' CHECK (role IN ('client', 'admin', 'super_admin')),
+    mfa_enabled BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     last_login TIMESTAMP WITH TIME ZONE NULL,
@@ -48,9 +50,148 @@ CREATE INDEX idx_users_email ON users(email);
 CREATE INDEX idx_users_username ON users(username);
 CREATE INDEX idx_users_created_at ON users(created_at);
 CREATE INDEX idx_users_is_active ON users(is_active);
+CREATE INDEX idx_users_role ON users(role);
 ```
 
-### 2. user_sessions
+### 2. mfa_secrets
+
+**Purpose**: Store MFA secrets and backup codes for two-factor authentication.
+
+```sql
+CREATE TABLE mfa_secrets (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    secret_key VARCHAR(32) NOT NULL, -- Base32 encoded secret
+    is_enabled BOOLEAN DEFAULT FALSE,
+    backup_codes TEXT[], -- Array of hashed backup codes
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    last_used TIMESTAMP WITH TIME ZONE NULL
+);
+
+-- Indexes
+CREATE INDEX idx_mfa_secrets_user_id ON mfa_secrets(user_id);
+```
+
+### 3. email_verifications
+
+**Purpose**: Handle email verification during user registration.
+
+```sql
+CREATE TABLE email_verifications (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    verification_token VARCHAR(255) UNIQUE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    verified_at TIMESTAMP WITH TIME ZONE NULL,
+    is_used BOOLEAN DEFAULT FALSE
+);
+
+-- Indexes
+CREATE INDEX idx_email_verifications_user_id ON email_verifications(user_id);
+CREATE INDEX idx_email_verifications_token ON email_verifications(verification_token);
+CREATE INDEX idx_email_verifications_expires_at ON email_verifications(expires_at);
+```
+
+### 4. book_categories
+
+**Purpose**: Categorize books in the library system.
+
+```sql
+CREATE TABLE book_categories (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) UNIQUE NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Indexes
+CREATE INDEX idx_book_categories_name ON book_categories(name);
+```
+
+### 5. books
+
+**Purpose**: Store book information for the library management system.
+
+```sql
+CREATE TABLE books (
+    id SERIAL PRIMARY KEY,
+    isbn VARCHAR(13) UNIQUE NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    author VARCHAR(255) NOT NULL,
+    publisher VARCHAR(255),
+    publication_year INTEGER,
+    category_id INTEGER REFERENCES book_categories(id),
+    description TEXT,
+    cover_image_url VARCHAR(500),
+    total_copies INTEGER NOT NULL DEFAULT 1,
+    available_copies INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+
+    -- Constraints
+    CONSTRAINT books_copies_valid CHECK (available_copies >= 0 AND available_copies <= total_copies),
+    CONSTRAINT books_isbn_valid CHECK (LENGTH(isbn) IN (10, 13))
+);
+
+-- Indexes
+CREATE INDEX idx_books_title ON books(title);
+CREATE INDEX idx_books_author ON books(author);
+CREATE INDEX idx_books_category_id ON books(category_id);
+CREATE INDEX idx_books_isbn ON books(isbn);
+```
+
+### 6. book_loans
+
+**Purpose**: Track book borrowing and lending activities.
+
+```sql
+CREATE TABLE book_loans (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    book_id INTEGER NOT NULL REFERENCES books(id) ON DELETE CASCADE,
+    loan_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    due_date TIMESTAMP WITH TIME ZONE NOT NULL,
+    return_date TIMESTAMP WITH TIME ZONE NULL,
+    status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'returned', 'overdue')),
+    renewal_count INTEGER DEFAULT 0,
+    notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Indexes
+CREATE INDEX idx_book_loans_user_id ON book_loans(user_id);
+CREATE INDEX idx_book_loans_book_id ON book_loans(book_id);
+CREATE INDEX idx_book_loans_due_date ON book_loans(due_date);
+CREATE INDEX idx_book_loans_status ON book_loans(status);
+```
+
+### 7. notifications
+
+**Purpose**: Store user notifications for web and email delivery.
+
+```sql
+CREATE TABLE notifications (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    type VARCHAR(50) NOT NULL, -- 'due_reminder', 'overdue', 'book_available', 'system'
+    title VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    is_email_sent BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    read_at TIMESTAMP WITH TIME ZONE NULL
+);
+
+-- Indexes
+CREATE INDEX idx_notifications_user_id ON notifications(user_id);
+CREATE INDEX idx_notifications_type ON notifications(type);
+CREATE INDEX idx_notifications_created_at ON notifications(created_at);
+CREATE INDEX idx_notifications_is_read ON notifications(is_read);
+```
+
+### 8. user_sessions
 
 **Purpose**: Track user login sessions and JWT tokens for security and session management.
 

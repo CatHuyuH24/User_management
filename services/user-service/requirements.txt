@@ -11,3 +11,18 @@ pydantic[email]==2.5.1
 pydantic-settings==2.1.0
 alembic==1.13.1
 aiofiles==23.2.0
+
+# MFA and Security
+pyotp==2.9.0
+qrcode[pil]==7.4.2
+
+# Email functionality
+aiosmtplib==3.0.1
+jinja2==3.1.2
+
+# Background tasks and caching
+celery==5.3.4
+redis==5.0.1
+
+# Additional utilities
+python-dateutil==2.8.2
