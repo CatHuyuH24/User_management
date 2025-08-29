@@ -150,7 +150,17 @@ async function submitLogin() {
       body: JSON.stringify(formData),
     });
 
-    // Save the authentication token
+    // Check if MFA is required
+    if (response.mfa_required) {
+      showLoading(false);
+      showAlert('MFA verification required', 'info');
+
+      // Show MFA verification modal with the MFA token
+      showMfaVerificationModal(response.mfa_token);
+      return;
+    }
+
+    // Save the authentication token (for non-MFA login or when MFA is completed)
     saveAuthToken(response.access_token);
 
     // Get user profile to determine redirect destination

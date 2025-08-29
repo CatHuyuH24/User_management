@@ -154,6 +154,7 @@ docker-compose down
 ```bash
 cd services/user-service
 pip install -r requirements.txt
+pip install -r requirements-test.txt  # For testing
 ```
 
 #### Setup Database
@@ -180,16 +181,65 @@ cd services/user-service
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
+### 5. Testing
+
+The project includes comprehensive testing capabilities:
+
+#### API Integration Tests
+
+Run the comprehensive API test suite:
+
+```bash
+cd services/user-service
+python test_runner.py
+```
+
+This will test:
+
+- ✅ Authentication (signup, login, security)
+- ✅ User profile management (get, update, avatar upload)
+- ✅ Admin functionality (dashboard, user management)
+- ✅ Security measures (token validation, access control)
+- ✅ Error handling and validation
+
+#### Unit Tests
+
+```bash
+cd services/user-service
+pytest tests/ -v
+```
+
+#### Test Coverage
+
+The test suite covers:
+
+- User registration and authentication
+- JWT token management
+- Profile updates and avatar uploads
+- Admin user management and deletion
+- Role-based access control
+- Input validation and error handling
+- Security measures and edge cases
+
 ## 🔧 Configuration
 
 ### Default Admin Account
 
 After running the setup script, you'll have access to:
 
-- **Username**: `HuyAdminnh`
-- **Email**: `uynhhuc810@gmail.com`
-- **Password**: `aAdDmMiInna33%$`
-- **Role**: Super Admin
+**Super Admin user**
+
+- Username: `super`
+- Email: `super@admin.com`
+- Password: `SuperAdminPassword123!`
+- Role: Super Admin
+
+**Client user**
+
+- Username: `client`
+- Email: `client@example.com`
+- Password: `ClientPassword123?`
+- Role: Client
 
 **Login**: Use either username or email with the password above.
 **Important**: Change this password immediately after first login!

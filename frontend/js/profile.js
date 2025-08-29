@@ -22,6 +22,9 @@ async function loadUserProfile() {
     });
 
     displayProfile(userProfile);
+
+    // Load MFA status
+    await loadMfaStatus();
   } catch (error) {
     if (error.message.includes('401')) {
       // Token expired or invalid
@@ -75,6 +78,9 @@ function displayProfile(profile) {
     ? '<span class="badge bg-success">Active</span>'
     : '<span class="badge bg-danger">Inactive</span>';
   document.getElementById('displayStatus').innerHTML = statusBadge;
+
+  // Update account info display
+  updateAccountInfoDisplay(profile);
 }
 
 function toggleEditMode(edit) {
@@ -339,3 +345,162 @@ async function handleAvatarUpload(event) {
 document.addEventListener('DOMContentLoaded', function () {
   initializeAvatarUpload();
 });
+
+// MFA Status Loading
+async function loadMfaStatus() {
+  try {
+    const status = await getMfaStatus();
+    displayMfaStatus(status);
+  } catch (error) {
+    console.log('Could not load MFA status:', error);
+    // Show default disabled state
+    displayMfaStatus({ enabled: false });
+  }
+}
+
+function displayMfaStatus(status) {
+  const statusText = document.getElementById('mfaStatusText');
+  const statusBadge = document.getElementById('mfaStatusBadge');
+
+  if (statusText && statusBadge) {
+    if (status.enabled) {
+      statusText.textContent =
+        'Your account is protected with two-factor authentication.';
+      statusBadge.innerHTML = '<i class="fas fa-check me-1"></i>Enabled';
+      statusBadge.className = 'badge bg-success';
+    } else {
+      statusText.textContent =
+        'Enable two-factor authentication for enhanced security.';
+      statusBadge.innerHTML =
+        '<i class="fas fa-exclamation-triangle me-1"></i>Disabled';
+      statusBadge.className = 'badge bg-warning';
+    }
+  }
+}
+
+// Password Change Functions
+function showChangePasswordModal() {
+  const modal = new bootstrap.Modal(
+    document.getElementById('changePasswordModal')
+  );
+  modal.show();
+
+  // Clear form
+  document.getElementById('changePasswordForm').reset();
+  clearAllFieldErrors();
+}
+
+async function changePassword() {
+  try {
+    const currentPassword = document
+      .getElementById('currentPassword')
+      .value.trim();
+    const newPassword = document.getElementById('newPassword').value.trim();
+    const confirmNewPassword = document
+      .getElementById('confirmNewPassword')
+      .value.trim();
+
+    // Validation
+    if (!currentPassword) {
+      setFieldError('currentPassword', 'Please enter your current password');
+      return;
+    }
+
+    if (!newPassword) {
+      setFieldError('newPassword', 'Please enter a new password');
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      setFieldError(
+        'newPassword',
+        'Password must be at least 8 characters long'
+      );
+      return;
+    }
+
+    // Password strength validation
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
+    if (!passwordRegex.test(newPassword)) {
+      setFieldError(
+        'newPassword',
+        'Password must contain uppercase, lowercase, numbers, and special characters'
+      );
+      return;
+    }
+
+    if (!confirmNewPassword) {
+      setFieldError('confirmNewPassword', 'Please confirm your new password');
+      return;
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      setFieldError('confirmNewPassword', 'Passwords do not match');
+      return;
+    }
+
+    clearAllFieldErrors();
+
+    // Change password via API
+    showLoading(true, 'Updating password...');
+
+    const response = await apiCall('/auth/change-password', {
+      method: 'POST',
+      body: JSON.stringify({
+        current_password: currentPassword,
+        new_password: newPassword,
+      }),
+    });
+
+    // Close modal
+    const modal = bootstrap.Modal.getInstance(
+      document.getElementById('changePasswordModal')
+    );
+    modal.hide();
+
+    showAlert('Password updated successfully!', 'success');
+  } catch (error) {
+    console.error('Password change error:', error);
+
+    let errorMessage = 'Failed to update password. Please try again.';
+
+    if (error.message.includes('current password is incorrect')) {
+      setFieldError('currentPassword', 'Current password is incorrect');
+      return;
+    } else if (error.message.includes('New password must be different')) {
+      setFieldError(
+        'newPassword',
+        'New password must be different from current password'
+      );
+      return;
+    }
+
+    showAlert(errorMessage, 'danger');
+  } finally {
+    showLoading(false);
+  }
+}
+
+// Update account info display
+function updateAccountInfoDisplay(profile) {
+  // Format dates
+  const formatDate = (dateString) => {
+    if (!dateString) return '-';
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  const lastLoginEl = document.getElementById('lastLoginDisplay');
+  const createdAtEl = document.getElementById('createdAtDisplay');
+  const updatedAtEl = document.getElementById('updatedAtDisplay');
+
+  if (lastLoginEl) lastLoginEl.textContent = formatDate(profile.last_login);
+  if (createdAtEl) createdAtEl.textContent = formatDate(profile.created_at);
+  if (updatedAtEl) updatedAtEl.textContent = formatDate(profile.updated_at);
+}

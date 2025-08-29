@@ -6,6 +6,8 @@ This project is a user management web application built with a microservices arc
 
 - **Primary Tech Stack:** Python/FastAPI (Backend), Vanilla JavaScript/Bootstrap 5 (Frontend), PostgreSQL (Database), Docker (Infrastructure).
 
+- The current Terminal environment is PowerShell
+
 - **Project Structure**
   - `docs/`: Contains all project documentation.
   - `services/`: Contains the individual microservices.
@@ -42,7 +44,20 @@ This project is a user management web application built with a microservices arc
    python frontend_server.py
    ```
 
-4. **Access Points:**
+4. **Run Unit tests**
+   1. User service Unit tests
+      ```bash
+      cd services/user-service
+      pytest tests/ -v
+      ```
+5. **Starting virtual environment with all dependencies inside**
+
+   ```bash
+   # PowerShell
+   .venv/Scripts/Activate
+   ```
+
+6. **Access Points:**
    - Frontend: http://localhost:3000
    - Backend API: http://localhost:8000
    - API Documentation: http://localhost:8000/docs
@@ -77,8 +92,10 @@ This project is a user management web application built with a microservices arc
 - [UI/UX Design](docs/UI_UX.md)
 - [User Stories](docs/User_Stories.md)
 - [UI/UX Design](docs/UI_UX.md)
-- [User Stories](docs/User_Stories.md)
+- [MFA SMS Implementation](docs/mfa_sms_implementation.md)
+- [Admin Portal_Design](docs/Admin_Portal_Design.md)
+- [Library Management Design](docs/Library_Management_Design.md)
 
 ## 6. Notes
 
-- When suggesting Terminal command, always go for WindowsPowershell command and syntax
+- When suggesting Terminal command, always choose WindowsPowershell command and syntax

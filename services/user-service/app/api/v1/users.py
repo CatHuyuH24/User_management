@@ -4,28 +4,28 @@ import os
 import uuid
 from typing import Optional
 
-from db.session import get_db
+from core.database import get_db
 from schemas.user import UserResponse, UserUpdate
 from services.user_service import user_service
-from api.v1.auth import get_current_user
+from services.auth_service import get_current_active_user_dependency
 from models.user import User
 
 router = APIRouter()
 
 @router.get("/me", response_model=UserResponse)
 async def get_current_user_profile(
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_active_user_dependency)
 ):
     """
     Get current user's profile information.
     """
-    return UserResponse.from_orm(current_user)
+    return UserResponse.model_validate(current_user)
 
 @router.put("/me", response_model=UserResponse)
 async def update_current_user_profile(
     user_update: UserUpdate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_active_user_dependency)
 ):
     """
     Update current user's profile information.
@@ -44,13 +44,13 @@ async def update_current_user_profile(
             detail="User not found"
         )
     
-    return UserResponse.from_orm(updated_user)
+    return UserResponse.model_validate(updated_user)
 
-@router.post("/me/avatar", response_model=UserResponse)
+@router.post("/me/avatar", response_model=dict)
 async def upload_avatar(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_active_user_dependency)
 ):
     """
     Upload and update user's avatar image.
@@ -65,9 +65,10 @@ async def upload_avatar(
             detail="Only image files (JPG, PNG, GIF) are allowed"
         )
     
-    # Validate file size (5MB max)
+    # Read file content and validate size (5MB max)
+    content = await file.read()
     max_size = 5 * 1024 * 1024  # 5MB
-    if hasattr(file, 'size') and file.size > max_size:
+    if len(content) > max_size:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="File size must be less than 5MB"
@@ -85,7 +86,6 @@ async def upload_avatar(
     # Save the file
     try:
         with open(file_path, "wb") as buffer:
-            content = await file.read()
             buffer.write(content)
         
         # Update user's avatar URL
@@ -93,7 +93,11 @@ async def upload_avatar(
         user_update = UserUpdate(avatar_url=avatar_url)
         updated_user = user_service.update_user(db, current_user.id, user_update)
         
-        return UserResponse.from_orm(updated_user)
+        return {
+            "message": "Avatar uploaded successfully",
+            "avatar_url": avatar_url,
+            "user": UserResponse.model_validate(updated_user)
+        }
         
     except Exception as e:
         raise HTTPException(

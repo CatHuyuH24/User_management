@@ -37,9 +37,10 @@ async def signup(user_create: UserCreate, db: Session = Depends(get_db)):
         user_response = UserResponse.model_validate(user)
         
         return UserCreateResponse(
-            message="User created successfully. You can now log in.",
+            message="User created successfully. Please complete MFA setup on first login for enhanced security.",
             user=user_response,
-            verification_required=False
+            verification_required=True,  # Email verification
+            mfa_setup_required=True      # MFA setup required
         )
     
     except HTTPException:

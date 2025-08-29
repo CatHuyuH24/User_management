@@ -112,7 +112,61 @@ class MFAService:
             db.rollback()
             return False
     
-    def setup_mfa(self, db: Session, user: User, verification_code: str) -> MFASetupResponse:
+    def setup_mfa_with_secret(self, db: Session, user: User, secret: str, verification_code: str) -> 'MFASetupResponse':
+        """Setup MFA for a user with provided secret"""
+        try:
+            # Check if user already has MFA enabled
+            existing_mfa = db.query(MFASecret).filter(
+                MFASecret.user_id == user.id,
+                MFASecret.is_active == True
+            ).first()
+            
+            if existing_mfa:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="MFA is already enabled for this user"
+                )
+            
+            # Verify the provided code with the secret
+            if not self.verify_totp_code(secret, verification_code):
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Invalid verification code"
+                )
+            
+            # Generate backup codes
+            backup_codes = self.generate_backup_codes()
+            
+            # Create MFA secret record
+            mfa_secret = MFASecret(
+                user_id=user.id,
+                secret_key=secret,
+                backup_codes=','.join(backup_codes),
+                backup_codes_count=len(backup_codes),
+                is_active=True
+            )
+            
+            db.add(mfa_secret)
+            db.commit()
+            db.refresh(mfa_secret)
+            
+            # Return setup response (import it properly)
+            from schemas.mfa import MFASetupResponse
+            return MFASetupResponse(
+                qr_code=self.generate_qr_code(secret, user.email),
+                secret_key=secret,
+                backup_codes=backup_codes
+            )
+            
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.error(f"Error setting up MFA: {str(e)}")
+            db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to setup MFA"
+            )
         """Setup MFA for a user"""
         try:
             # Check if user already has MFA enabled

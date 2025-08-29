@@ -15,6 +15,8 @@ class MFASetupResponse(BaseModel):
 
 class MFAVerifyRequest(BaseModel):
     mfa_code: str = Field(..., min_length=6, max_length=6, description="6-digit MFA code or backup code")
+    mfa_token: Optional[str] = Field(None, description="MFA token from login (required for login verification)")
+    email: Optional[str] = Field(None, description="User email (for legacy compatibility)")
 
 class MFAVerifyResponse(BaseModel):
     access_token: str

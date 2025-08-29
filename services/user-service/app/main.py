@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api.v1.auth import router as auth_router
+from api.v1.users import router as users_router
 from api.mfa import router as mfa_router
 from api.admin import router as admin_router  
 from api.library import router as library_router
@@ -47,6 +48,7 @@ app.add_middleware(
 api_prefix = getattr(settings, 'API_V1_STR', '/api/v1')
 
 app.include_router(auth_router, prefix=api_prefix, tags=["Authentication"])
+app.include_router(users_router, prefix=f"{api_prefix}/users", tags=["Users"])
 app.include_router(mfa_router, prefix=api_prefix, tags=["Multi-Factor Authentication"])
 app.include_router(admin_router, prefix=api_prefix, tags=["Admin"])
 app.include_router(library_router, prefix=api_prefix, tags=["Library"])

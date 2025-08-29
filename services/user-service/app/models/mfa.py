@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, ForeignKey, ARRAY
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, ForeignKey, JSON
 from sqlalchemy.sql import func
 from core.database import Base
 
@@ -9,7 +9,7 @@ class MFASecret(Base):
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     secret_key = Column(String(32), nullable=False)  # Base32 encoded secret
     is_enabled = Column(Boolean, default=False)
-    backup_codes = Column(ARRAY(String), nullable=True)  # Array of hashed backup codes
+    backup_codes = Column(JSON, nullable=True)  # JSON array of hashed backup codes (cross-database compatible)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     last_used = Column(DateTime(timezone=True), nullable=True)
 

@@ -5,7 +5,13 @@
 echo "🚀 Initializing Enhanced User Management Project..."
 
 # Check if Docker is installed
-if ! command -v docker &> /dev/null; then
+if ! command -v docker &> /de"🛠️  Management Commands:"
+echo "   • Stop backend:     docker-compose down"
+echo "   • View logs:        docker-compose logs user-service"
+echo "   • Stop frontend:    kill $FRONTEND_PID"
+echo "   • Database access:  docker-compose exec db psql -U user -d db"
+echo "   • Run API tests:    cd services/user-service && python test_runner.py"
+echo "   • Health check:     curl http://localhost:8000/health"l; then
     echo "❌ Docker is not installed. Please install Docker first."
     echo "Visit: https://docs.docker.com/get-docker/"
     exit 1

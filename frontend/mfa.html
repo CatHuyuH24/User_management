@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Two-Factor Authentication - User Management</title>
+    <link rel="icon" type="image/jpeg" href="images/user-management-icon.jpg" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #3498db;
+        --accent-color: #e74c3c;
+        --success-color: #27ae60;
+      }
+
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .main-container {
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+      }
+
+      .card-header {
+        background: linear-gradient(
+          45deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        color: white;
+        border-radius: 15px 15px 0 0 !important;
+        border: none;
+        padding: 20px;
+      }
+
+      .btn-primary {
+        background: linear-gradient(
+          45deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        border: none;
+        border-radius: 10px;
+        padding: 12px 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn-success {
+        background: linear-gradient(45deg, var(--success-color), #2ecc71);
+        border: none;
+        border-radius: 10px;
+        padding: 12px 25px;
+        font-weight: 600;
+      }
+
+      .btn-danger {
+        background: linear-gradient(45deg, var(--accent-color), #c0392b);
+        border: none;
+        border-radius: 10px;
+        padding: 12px 25px;
+        font-weight: 600;
+      }
+
+      .status-card {
+        border-left: 5px solid var(--success-color);
+        background: #f8f9fa;
+      }
+
+      .status-card.disabled {
+        border-left-color: var(--accent-color);
+      }
+
+      .feature-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        background: linear-gradient(45deg, var(--secondary-color), #5dade2);
+        color: white;
+        font-size: 24px;
+      }
+
+      .loading {
+        display: none;
+      }
+
+      .loading.show {
+        display: block;
+      }
+
+      .backup-codes {
+        font-family: 'Courier New', monospace;
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 15px;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .qr-code-container {
+        text-align: center;
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        border: 2px dashed #dee2e6;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main-container">
+      <div class="container">
+        <!-- Header -->
+        <div class="row mb-4">
+          <div class="col">
+            <div class="d-flex justify-content-between align-items-center">
+              <h2 class="text-white mb-0">
+                <i class="fas fa-shield-alt me-2"></i>
+                Two-Factor Authentication
+              </h2>
+              <button class="btn btn-outline-light" onclick="goBack()">
+                <i class="fas fa-arrow-left me-2"></i>Back
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loading -->
+        <div id="loadingContainer" class="text-center text-white loading">
+          <div class="spinner-border mb-3" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p>Loading MFA settings...</p>
+        </div>
+
+        <!-- Alert Container -->
+        <div id="alertContainer"></div>
+
+        <!-- MFA Status Card -->
+        <div class="row mb-4">
+          <div class="col-md-8 mx-auto">
+            <div class="card status-card" id="mfaStatusCard">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-md-2 text-center">
+                    <div class="feature-icon" id="statusIcon">
+                      <i class="fas fa-shield-alt"></i>
+                    </div>
+                  </div>
+                  <div class="col-md-7">
+                    <h5 class="card-title mb-1" id="statusTitle">
+                      Two-Factor Authentication
+                    </h5>
+                    <p class="card-text text-muted mb-0" id="statusDescription">
+                      Loading status...
+                    </p>
+                  </div>
+                  <div class="col-md-3 text-end">
+                    <div id="statusActions">
+                      <!-- Action buttons will be inserted here -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MFA Setup Guide (shown when disabled) -->
+        <div id="setupGuide" class="row mb-4 d-none">
+          <div class="col-md-10 mx-auto">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">
+                  <i class="fas fa-info-circle me-2"></i>
+                  Why Enable Two-Factor Authentication?
+                </h5>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-4 text-center mb-3">
+                    <div class="feature-icon">
+                      <i class="fas fa-lock"></i>
+                    </div>
+                    <h6>Enhanced Security</h6>
+                    <p class="text-muted small">
+                      Protect your account with an additional layer of security
+                      beyond just your password.
+                    </p>
+                  </div>
+                  <div class="col-md-4 text-center mb-3">
+                    <div class="feature-icon">
+                      <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h6>Mobile App Integration</h6>
+                    <p class="text-muted small">
+                      Use popular authenticator apps like Google Authenticator
+                      or Authy on your phone.
+                    </p>
+                  </div>
+                  <div class="col-md-4 text-center mb-3">
+                    <div class="feature-icon">
+                      <i class="fas fa-key"></i>
+                    </div>
+                    <h6>Backup Codes</h6>
+                    <p class="text-muted small">
+                      Get backup codes to access your account if you lose your
+                      phone.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MFA Management (shown when enabled) -->
+        <div id="managementPanel" class="row d-none">
+          <div class="col-md-8 mx-auto">
+            <!-- Backup Codes Section -->
+            <div class="card mb-4">
+              <div class="card-header">
+                <h5 class="mb-0">
+                  <i class="fas fa-key me-2"></i>
+                  Backup Codes
+                </h5>
+              </div>
+              <div class="card-body">
+                <p class="text-muted">
+                  Backup codes allow you to access your account if you lose your
+                  phone. Each code can only be used once.
+                </p>
+
+                <div id="backupCodesSection">
+                  <div class="d-grid gap-2 d-md-flex">
+                    <button
+                      class="btn btn-outline-primary"
+                      onclick="regenerateBackupCodes()"
+                    >
+                      <i class="fas fa-sync me-2"></i>Generate New Codes
+                    </button>
+                    <button
+                      class="btn btn-outline-secondary"
+                      onclick="downloadBackupCodes()"
+                      id="downloadCodesBtn"
+                      style="display: none"
+                    >
+                      <i class="fas fa-download me-2"></i>Download Codes
+                    </button>
+                  </div>
+
+                  <div
+                    id="backupCodesDisplay"
+                    class="mt-3"
+                    style="display: none"
+                  >
+                    <div class="alert alert-warning">
+                      <i class="fas fa-exclamation-triangle me-2"></i>
+                      <strong>Important:</strong> Save these codes in a secure
+                      location. They will not be shown again.
+                    </div>
+                    <div class="backup-codes" id="backupCodesList">
+                      <!-- Backup codes will be displayed here -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Disable MFA Section -->
+            <div class="card">
+              <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">
+                  <i class="fas fa-exclamation-triangle me-2"></i>
+                  Disable Two-Factor Authentication
+                </h5>
+              </div>
+              <div class="card-body">
+                <p class="text-muted">
+                  Disabling two-factor authentication will make your account
+                  less secure. You'll need to provide your password and a
+                  current MFA code.
+                </p>
+
+                <button class="btn btn-danger" onclick="showDisableMfaModal()">
+                  <i class="fas fa-shield-alt me-2"></i>Disable MFA
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Disable MFA Modal -->
+    <div
+      class="modal fade"
+      id="disableMfaModal"
+      tabindex="-1"
+      aria-labelledby="disableMfaModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title" id="disableMfaModalLabel">
+              <i class="fas fa-exclamation-triangle me-2"></i>Disable Two-Factor
+              Authentication
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="alert alert-warning">
+              <i class="fas fa-exclamation-triangle me-2"></i>
+              <strong>Warning:</strong> This will make your account less secure.
+            </div>
+
+            <form id="disableMfaForm">
+              <div class="mb-3">
+                <label for="confirmPassword" class="form-label"
+                  >Current Password</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="confirmPassword"
+                  required
+                />
+                <div class="invalid-feedback" id="confirmPasswordError"></div>
+              </div>
+
+              <div class="mb-3">
+                <label for="confirmMfaCode" class="form-label"
+                  >Current MFA Code</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="confirmMfaCode"
+                  placeholder="000000"
+                  maxlength="8"
+                  pattern="[0-9A-Z]{6,8}"
+                  required
+                />
+                <div class="form-text">
+                  Enter a 6-digit code from your app or an 8-character backup
+                  code
+                </div>
+                <div class="invalid-feedback" id="confirmMfaCodeError"></div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              onclick="confirmDisableMfa()"
+            >
+              <i class="fas fa-shield-alt me-2"></i>Disable MFA
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/mfa.js"></script>
+    <script>
+      // Page-specific MFA management functions
+      let currentBackupCodes = [];
+
+      // Initialize page
+      document.addEventListener('DOMContentLoaded', async function () {
+        if (!getAuthToken()) {
+          window.location.href = 'login.html';
+          return;
+        }
+
+        await loadMfaStatus();
+      });
+
+      // Load and display MFA status
+      async function loadMfaStatus() {
+        try {
+          showLoading(true, 'Loading MFA settings...');
+
+          const status = await getMfaStatus();
+          displayMfaStatus(status);
+        } catch (error) {
+          console.error('Error loading MFA status:', error);
+          showAlert('Failed to load MFA settings. Please try again.', 'danger');
+        } finally {
+          showLoading(false);
+        }
+      }
+
+      // Display MFA status
+      function displayMfaStatus(status) {
+        const statusCard = document.getElementById('mfaStatusCard');
+        const statusIcon = document.getElementById('statusIcon');
+        const statusTitle = document.getElementById('statusTitle');
+        const statusDescription = document.getElementById('statusDescription');
+        const statusActions = document.getElementById('statusActions');
+        const setupGuide = document.getElementById('setupGuide');
+        const managementPanel = document.getElementById('managementPanel');
+
+        if (status.enabled) {
+          // MFA is enabled
+          statusCard.classList.remove('disabled');
+          statusCard.classList.add('enabled');
+          statusIcon.innerHTML = '<i class="fas fa-shield-check"></i>';
+          statusTitle.textContent = 'Two-Factor Authentication Enabled';
+          statusDescription.textContent =
+            'Your account is protected with two-factor authentication.';
+          statusActions.innerHTML =
+            '<span class="badge bg-success fs-6"><i class="fas fa-check me-1"></i>Enabled</span>';
+
+          setupGuide.classList.add('d-none');
+          managementPanel.classList.remove('d-none');
+        } else {
+          // MFA is disabled
+          statusCard.classList.remove('enabled');
+          statusCard.classList.add('disabled');
+          statusIcon.innerHTML = '<i class="fas fa-shield-alt"></i>';
+          statusTitle.textContent = 'Two-Factor Authentication Disabled';
+          statusDescription.textContent =
+            'Enable two-factor authentication to better protect your account.';
+          statusActions.innerHTML =
+            '<button class="btn btn-success" onclick="setupMfa()"><i class="fas fa-plus me-2"></i>Enable MFA</button>';
+
+          setupGuide.classList.remove('d-none');
+          managementPanel.classList.add('d-none');
+        }
+      }
+
+      // Setup MFA
+      function setupMfa() {
+        showMfaSetupModal();
+
+        // Listen for modal close to reload status
+        const modal = document.getElementById('mfaSetupModal');
+        modal.addEventListener('hidden.bs.modal', async function () {
+          await loadMfaStatus();
+        });
+      }
+
+      // Show disable MFA modal
+      function showDisableMfaModal() {
+        const modal = new bootstrap.Modal(
+          document.getElementById('disableMfaModal')
+        );
+        modal.show();
+
+        // Clear form
+        document.getElementById('disableMfaForm').reset();
+        clearAllFieldErrors();
+      }
+
+      // Confirm disable MFA
+      async function confirmDisableMfa() {
+        try {
+          const password = document
+            .getElementById('confirmPassword')
+            .value.trim();
+          const mfaCode = document
+            .getElementById('confirmMfaCode')
+            .value.trim();
+
+          if (!password) {
+            setFieldError('confirmPassword', 'Please enter your password');
+            return;
+          }
+
+          if (!mfaCode) {
+            setFieldError('confirmMfaCode', 'Please enter the MFA code');
+            return;
+          }
+
+          if (mfaCode.length !== 6 && mfaCode.length !== 8) {
+            setFieldError(
+              'confirmMfaCode',
+              'Code must be 6 digits or 8 characters'
+            );
+            return;
+          }
+
+          clearAllFieldErrors();
+
+          // Disable MFA
+          await disableMfa(password, mfaCode);
+
+          // Close modal
+          const modal = bootstrap.Modal.getInstance(
+            document.getElementById('disableMfaModal')
+          );
+          modal.hide();
+
+          showAlert('Two-factor authentication has been disabled.', 'warning');
+
+          // Reload status
+          await loadMfaStatus();
+        } catch (error) {
+          console.error('Error disabling MFA:', error);
+          let errorMessage = 'Failed to disable MFA. Please try again.';
+
+          if (error.message.includes('Invalid password')) {
+            setFieldError('confirmPassword', 'Incorrect password');
+            return;
+          } else if (error.message.includes('Invalid MFA code')) {
+            setFieldError('confirmMfaCode', 'Invalid MFA code');
+            return;
+          }
+
+          showAlert(errorMessage, 'danger');
+        }
+      }
+
+      // Regenerate backup codes
+      async function regenerateBackupCodes() {
+        try {
+          showLoading(true, 'Generating new backup codes...');
+
+          const response = await regenerateBackupCodes();
+          currentBackupCodes = response.backup_codes;
+
+          // Display codes
+          displayBackupCodes(currentBackupCodes);
+
+          showAlert('New backup codes generated successfully!', 'success');
+        } catch (error) {
+          console.error('Error regenerating backup codes:', error);
+          showAlert(
+            'Failed to generate new backup codes. Please try again.',
+            'danger'
+          );
+        } finally {
+          showLoading(false);
+        }
+      }
+
+      // Display backup codes
+      function displayBackupCodes(codes) {
+        const display = document.getElementById('backupCodesDisplay');
+        const list = document.getElementById('backupCodesList');
+        const downloadBtn = document.getElementById('downloadCodesBtn');
+
+        const codesHtml = codes
+          .map((code, index) => `<div>${index + 1}. ${code}</div>`)
+          .join('');
+
+        list.innerHTML = codesHtml;
+        display.style.display = 'block';
+        downloadBtn.style.display = 'inline-block';
+      }
+
+      // Download backup codes (reuse from mfa.js)
+      function downloadCurrentBackupCodes() {
+        if (currentBackupCodes.length === 0) {
+          showAlert('No backup codes available to download.', 'warning');
+          return;
+        }
+
+        // Set global variable for mfa.js function
+        window.mfaBackupCodes = currentBackupCodes;
+        downloadBackupCodes();
+      }
+
+      // Go back to dashboard
+      function goBack() {
+        // Determine which dashboard to go to based on user role
+        const profile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+
+        if (profile.role === 'admin' || profile.role === 'super_admin') {
+          window.location.href = 'admin-dashboard.html';
+        } else {
+          window.location.href = 'client-dashboard.html';
+        }
+      }
+
+      // Loading helper
+      function showLoading(show, message = 'Loading...') {
+        const container = document.getElementById('loadingContainer');
+        if (show) {
+          container.classList.add('show');
+          container.querySelector('p').textContent = message;
+        } else {
+          container.classList.remove('show');
+        }
+      }
+    </script>
+  </body>
+</html>

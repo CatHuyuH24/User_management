@@ -129,6 +129,7 @@ class UserCreateResponse(BaseModel):
     message: str
     user: UserResponse
     verification_required: bool = True
+    mfa_setup_required: Optional[bool] = False
 
 # Schema for MFA setup response
 class MFASetupResponse(BaseModel):
