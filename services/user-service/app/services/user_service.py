@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException, status
 from typing import Optional
 
-from models.user import User
+from models.user import User, UserRole as ModelUserRole
 from schemas.user import UserCreate, UserUpdate
 from core.security import get_password_hash, verify_password
 from datetime import datetime
@@ -30,12 +30,16 @@ class UserService:
             # Create user with hashed password
             hashed_password = get_password_hash(user_create.password)
             
+            # Get the role value as string for database
+            role_value = user_create.role.value if user_create.role else "client"
+            
             db_user = User(
                 username=user_create.username,
                 email=user_create.email,
                 hashed_password=hashed_password,
                 first_name=user_create.first_name,
                 last_name=user_create.last_name,
+                role=role_value,  # Pass string value directly
                 is_active=True,
                 is_verified=True  # Users are verified by default (no email verification required)
             )

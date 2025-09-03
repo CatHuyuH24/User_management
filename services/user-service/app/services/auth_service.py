@@ -26,6 +26,7 @@ class AuthService:
         self.secret_key = settings.SECRET_KEY
         self.algorithm = settings.ALGORITHM
         self.access_token_expire_minutes = settings.ACCESS_TOKEN_EXPIRE_MINUTES
+        self.refresh_token_expire_days = getattr(settings, 'REFRESH_TOKEN_EXPIRE_DAYS', 7)
         self.mfa_token_expire_minutes = getattr(settings, 'MFA_TOKEN_EXPIRE_MINUTES', 10)
     
     def verify_password(self, plain_password: str, hashed_password: str) -> bool:
@@ -122,13 +123,14 @@ class AuthService:
         return self.create_access_token(data, token_type="mfa")
     
     def verify_token(self, token: str, expected_type: str = "access") -> Optional[TokenData]:
-        """Verify and decode JWT token"""
+        """Verify and decode JWT token with enhanced error handling"""
         try:
             payload = jwt.decode(token, self.secret_key, algorithms=[self.algorithm])
             
             # Check token type
             token_type = payload.get("type", "access")
             if token_type != expected_type:
+                logger.warning(f"Token type mismatch: expected {expected_type}, got {token_type}")
                 return None
             
             user_id: str = payload.get("sub")
@@ -137,7 +139,16 @@ class AuthService:
             username: str = payload.get("username")
             
             if user_id is None:
+                logger.warning("Token missing user ID")
                 return None
+            
+            # Check if token is expired (additional check)
+            exp = payload.get("exp")
+            if exp:
+                current_time = datetime.utcnow().timestamp()
+                if current_time > exp:
+                    logger.info(f"Token expired for user {user_id}")
+                    return None
             
             token_data = TokenData(
                 user_id=int(user_id),
@@ -147,6 +158,12 @@ class AuthService:
             )
             return token_data
             
+        except jwt.ExpiredSignatureError:
+            logger.info("Token has expired")
+            return None
+        except jwt.InvalidTokenError as e:
+            logger.warning(f"Invalid token: {str(e)}")
+            return None
         except JWTError as e:
             logger.error(f"JWT Error: {str(e)}")
             return None
@@ -154,38 +171,51 @@ class AuthService:
             logger.error(f"Token validation error: {str(e)}")
             return None
         except Exception as e:
-            logger.error(f"Error verifying token: {str(e)}")
+            logger.error(f"Unexpected error verifying token: {str(e)}")
             return None
     
     def get_current_user(self, db: Session, credentials: HTTPAuthorizationCredentials = Depends(security)) -> User:
-        """Get current authenticated user from token"""
+        """Get current authenticated user from token with enhanced error handling"""
         credentials_exception = HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
         
+        token_expired_exception = HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token has expired",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+        
         try:
             token_data = self.verify_token(credentials.credentials)
             if token_data is None:
+                logger.warning(f"Token validation failed")
                 raise credentials_exception
             
             user = db.query(User).filter(User.id == token_data.user_id).first()
             if user is None:
+                logger.warning(f"User not found for token user_id: {token_data.user_id}")
                 raise credentials_exception
             
             if not user.is_active:
+                logger.warning(f"Inactive user attempted access: {user.email}")
                 raise HTTPException(
                     status_code=status.HTTP_401_UNAUTHORIZED,
                     detail="Inactive user"
                 )
+            
+            # Update last_login timestamp
+            user.last_login = datetime.utcnow()
+            db.commit()
             
             return user
             
         except HTTPException:
             raise
         except Exception as e:
-            logger.error(f"Error getting current user: {str(e)}")
+            logger.error(f"Unexpected error getting current user: {str(e)}")
             raise credentials_exception
     
     def get_current_active_user(self, db: Session, credentials: HTTPAuthorizationCredentials = Depends(security)) -> User:
@@ -220,7 +250,8 @@ class AuthService:
         """Require admin or super_admin role"""
         user = self.get_current_active_user(db, credentials)
         
-        if user.role not in [UserRole.ADMIN, UserRole.SUPER_ADMIN]:
+        # Check against string values since role is stored as string in DB
+        if user.role not in ["admin", "super_admin"]:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Admin access required"
@@ -232,7 +263,8 @@ class AuthService:
         """Require super_admin role"""
         user = self.get_current_active_user(db, credentials)
         
-        if user.role != UserRole.SUPER_ADMIN:
+        # Check against string value since role is stored as string in DB
+        if user.role != "super_admin":
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Super admin access required"
@@ -297,7 +329,8 @@ def require_admin_dependency(
 ) -> User:
     """FastAPI dependency to require admin role"""
     user = auth_service.get_current_active_user(db, credentials)
-    if user.role not in [UserRole.ADMIN, UserRole.SUPER_ADMIN]:
+    # Check against string values since role is stored as string in DB
+    if user.role not in ["admin", "super_admin"]:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Admin privileges required"

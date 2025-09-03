@@ -400,7 +400,18 @@ async function deleteUser(userId) {
     loadUsers(currentPage);
   } catch (error) {
     console.error('Failed to delete user:', error);
-    showAlert(`Failed to delete user: ${error.message}`, 'danger');
+
+    // Better error handling
+    let errorMessage = 'Failed to delete user';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (typeof error === 'string') {
+      errorMessage = error;
+    } else if (error && error.detail) {
+      errorMessage = error.detail;
+    }
+
+    showAlert(`Failed to delete user: ${errorMessage}`, 'danger');
   } finally {
     showLoading(false);
   }

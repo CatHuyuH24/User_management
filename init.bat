@@ -93,16 +93,16 @@ goto test_api
 
 :api_ready
 
-REM Create default admin account
-echo 👤 Creating default admin account...
+REM Create default user accounts (admin and client)
+echo 👤 Creating default user accounts...
 cd scripts
-%PYTHON_CMD% create_admin.py
-set admin_exit_code=%errorlevel%
+%PYTHON_CMD% create_users.py
+set users_exit_code=%errorlevel%
 cd ..
 
-if %admin_exit_code% neq 0 (
-    echo ⚠️  Warning: Failed to create admin account automatically.
-    echo    You can create it manually later or check the logs.
+if %users_exit_code% neq 0 (
+    echo ⚠️  Warning: Failed to create user accounts automatically.
+    echo    You can create them manually later or check the logs.
 )
 
 REM Start frontend server in background

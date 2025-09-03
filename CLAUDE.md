@@ -69,20 +69,16 @@ This project is a user management web application built with a microservices arc
 - Always use FastAPI's dependency injection for backend services.
 - Avoid placing complex business logic directly in route files. Extract logic into `service` or `use_case` modules.
 - All functions and classes must include Google-style docstrings.
-- Adhere to best practices and industry standards for microservices implementation.
 - Ensure centralized log storage for both backend and frontend functionalities.
 - The UI/UX must be user-centric and user-friendly with responsive design.
 - All frontend pages must include proper favicon implementation.
-- Security best practices for file uploads (avatar images).
 
 ## 4. Immutable Architectural Decisions
 
-- Implement centralized log management.
 - Use microservices for the backend.
 - Ensure frontend fallback mechanisms, resiliency, and simplicity to enhance user experience.
 - JWT-based authentication with secure token management.
 - File upload capabilities with proper security validation.
-- Bootstrap 5 for responsive frontend design.
 
 ## 5. Key Reference Documents
 

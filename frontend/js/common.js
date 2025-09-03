@@ -111,12 +111,25 @@ async function apiCall(endpoint, options = {}) {
     const data = await response.json();
 
     if (!response.ok) {
+      // Handle authentication errors (401) and forbidden errors (403)
+      if (response.status === 401 || response.status === 403) {
+        console.warn('Authentication failed - redirecting to login');
+        handleAuthenticationFailure();
+        throw new Error('Authentication required');
+      }
       throw new Error(data.detail || 'An error occurred');
     }
 
     return data;
   } catch (error) {
     console.error('API call failed:', error);
+    
+    // If it's a network error or the server is unreachable, also check auth
+    if (error.message.includes('NetworkError') || error.message.includes('Failed to fetch')) {
+      console.warn('Network error - checking authentication status');
+      // Don't auto-logout on network errors, but log the issue
+    }
+    
     throw error;
   }
 }
@@ -136,6 +149,61 @@ function removeAuthToken() {
 
 function isAuthenticated() {
   return !!getAuthToken();
+}
+
+// Handle authentication failures and auto-logout
+function handleAuthenticationFailure() {
+  console.log('Handling authentication failure - logging out user');
+  
+  // Clear the auth token
+  removeAuthToken();
+  
+  // Show a brief message
+  showAlert('Your session has expired. Please log in again.', 'warning');
+  
+  // Redirect to login page after a short delay
+  setTimeout(() => {
+    window.location.href = 'login.html';
+  }, 1500);
+}
+
+// Check if user data is in "Loading" state and handle appropriately
+async function validateUserSession() {
+  if (!isAuthenticated()) {
+    return false;
+  }
+  
+  try {
+    // Try to fetch user profile to validate session
+    const response = await fetch(`${API_BASE_URL}/me`, {
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (!response.ok) {
+      if (response.status === 401 || response.status === 403) {
+        handleAuthenticationFailure();
+        return false;
+      }
+    }
+    
+    const userData = await response.json();
+    
+    // Check if user data indicates invalid state
+    if (!userData || !userData.username || userData.username === 'Loading' || !userData.email) {
+      console.warn('Invalid user data detected - logging out');
+      handleAuthenticationFailure();
+      return false;
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Session validation failed:', error);
+    handleAuthenticationFailure();
+    return false;
+  }
 }
 
 // Form validation styling

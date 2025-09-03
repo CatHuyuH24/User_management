@@ -1,0 +1,232 @@
+[
+  {
+    "endpoint": "/",
+    "method": "GET",
+    "expected_status": 200,
+    "actual_status": "N/A",
+    "test_status": "PASS",
+    "error": null,
+    "timestamp": "2025-08-29T22:10:52.978224",
+    "response_sample": "{'message': 'Enhanced User Management Service with MFA and Library Management', 'version': '1.0.0', 'features': ['Multi-Factor Authentication (TOTP)', 'Role-based Access Control', 'Admin Portal with U"
+  },
+  {
+    "endpoint": "/health",
+    "method": "GET",
+    "expected_status": 200,
+    "actual_status": "N/A",
+    "test_status": "PASS",
+    "error": null,
+    "timestamp": "2025-08-29T22:10:52.978224",
+    "response_sample": "{'status': 'healthy', 'service': 'enhanced-user-management', 'features': {'mfa': True, 'admin_portal': True, 'library_management': True, 'notifications': True, 'email': True}}"
+  },
+  {
+    "endpoint": "/api/v1/signup",
+    "method": "POST",
+    "expected_status": 201,
+    "actual_status": "N/A",
+    "test_status": "PASS",
+    "error": null,
+    "timestamp": "2025-08-29T22:10:53.095791",
+    "response_sample": "{'detail': 'Username already taken'}"
+  },
+  {
+    "endpoint": "/api/v1/signup",
+    "method": "POST",
+    "expected_status": 201,
+    "actual_status": "N/A",
+    "test_status": "PASS",
+    "error": null,
+    "timestamp": "2025-08-29T22:10:53.389040",
+    "response_sample": "{'message': 'User created successfully. Please complete MFA setup on first login for enhanced security.', 'user': {'id': 40, 'username': 'testadmin123', 'email': 'testadmin@example.com', 'is_active': "
+  },
+  {
+    "endpoint": "/api/v1/login",
+    "method": "POST",
+    "expected_status": 200,
+    "actual_status": "N/A",
+    "test_status": "PASS",
+    "error": null,
+    "timestamp": "2025-08-29T22:10:53.660556",
+    "response_sample": "{'access_token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ0ZXN0MTIzQGV4YW1wbGUuY29tIiwicm9sZSI6ImNsaWVudCIsInVzZXJuYW1lIjoidGVzdHVzZXIxMjMiLCJtZmFfdmVyaWZpZWQiOmZhbHNlLCJleHAiO"
+  },
+  {
+    "endpoint": "/api/v1/login",
+    "method": "POST",
+    "expected_status": 200,
+    "actual_status": "N/A",
+    "test_status": "PASS",
+    "error": null,
+    "timestamp": "2025-08-29T22:10:53.913248",
+    "response_sample": "{'access_token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MCIsImVtYWlsIjoidGVzdGFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6ImNsaWVudCIsInVzZXJuYW1lIjoidGVzdGFkbWluMTIzIiwibWZhX3ZlcmlmaWVkIjpmYWxzZSwiZ"
+  },
+  {
+    "endpoint": "/api/v1/me",
+    "method": "GET",
+    "expected_status": 200,
+    "actual_status": "N/A",
+    "test_status": "PASS",
+    "error": null,
+    "timestamp": "2025-08-29T22:10:53.915273",
+    "response_sample": "{'id': 1, 'username': 'testuser123', 'email': 'test123@example.com', 'is_active': True, 'is_verified': True, 'role': 'client', 'mfa_enabled': False, 'created_at': '2025-08-27T23:42:56.253953Z', 'first"
+  },
+  {
+    "endpoint": "/api/v1/refresh",
+    "method": "POST",
+    "expected_status": 200,
+    "actual_status": "N/A",
+    "test_status": "PASS",
+    "error": null,
+    "timestamp": "2025-08-29T22:10:53.928523",
+    "response_sample": "{'access_token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ0ZXN0MTIzQGV4YW1wbGUuY29tIiwicm9sZSI6ImNsaWVudCIsInVzZXJuYW1lIjoidGVzdHVzZXIxMjMiLCJtZmFfdmVyaWZpZWQiOmZhbHNlLCJleHAiO"
+  },
+  {
+    "endpoint": "/api/v1/logout",
+    "method": "POST",
+    "expected_status": 200,
+    "actual_status": "N/A",
+    "test_status": "PASS",
+    "error": null,
+    "timestamp": "2025-08-29T22:10:53.932979",
+    "response_sample": "{'message': 'Successfully logged out'}"
+  },
+  {
+    "endpoint": "/api/v1/users/me",
+    "method": "GET",
+    "expected_status": 200,
+    "actual_status": "N/A",
+    "test_status": "PASS",
+    "error": null,
+    "timestamp": "2025-08-29T22:10:53.938079",
+    "response_sample": "{'id': 1, 'username': 'testuser123', 'email': 'test123@example.com', 'is_active': True, 'is_verified': True, 'role': 'client', 'mfa_enabled': False, 'created_at': '2025-08-27T23:42:56.253953Z', 'first"
+  },
+  {
+    "endpoint": "/api/v1/users/me",
+    "method": "PUT",
+    "expected_status": 200,
+    "actual_status": "N/A",
+    "test_status": "PASS",
+    "error": null,
+    "timestamp": "2025-08-29T22:10:54.001810",
+    "response_sample": "{'id': 1, 'username': 'testuser123', 'email': 'test123@example.com', 'is_active': True, 'is_verified': True, 'role': 'client', 'mfa_enabled': False, 'created_at': '2025-08-27T23:42:56.253953Z', 'first"
+  },
+  {
+    "endpoint": "/api/v1/auth/mfa/status",
+    "method": "GET",
+    "expected_status": 200,
+    "actual_status": "N/A",
+    "test_status": "PASS",
+    "error": null,
+    "timestamp": "2025-08-29T22:10:54.007461",
+    "response_sample": "{'enabled': False, 'secret_exists': False, 'backup_codes_count': 0, 'last_used': None}"
+  },
+  {
+    "endpoint": "/api/v1/auth/mfa/initiate",
+    "method": "POST",
+    "expected_status": 200,
+    "actual_status": "N/A",
+    "test_status": "PASS",
+    "error": null,
+    "timestamp": "2025-08-29T22:10:54.060886",
+    "response_sample": "{'qr_code': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAeoAAAHqAQAAAADjFjCXAAAEPElEQVR4nO2dTYrrOhBGTz0bMnSgF5ClyDt4S+o1vR3YS8kCLsjDgMz3BpIsJ8M40J2bqkFjxz4ogaL+pTZxQOZ/jtDguOOOO+6444477vhrcSvSA6wGS"
+  },
+  {
+    "endpoint": "/api/v1/auth/mfa/qr-code",
+    "method": "GET",
+    "expected_status": 200,
+    "actual_status": "N/A",
+    "test_status": "PASS",
+    "error": null,
+    "timestamp": "2025-08-29T22:10:54.076536",
+    "response_sample": "QR Code data"
+  },
+  {
+    "endpoint": "/api/v1/admin/dashboard",
+    "method": "GET",
+    "expected_status": 200,
+    "actual_status": "N/A",
+    "test_status": "PASS",
+    "error": null,
+    "timestamp": "2025-08-29T22:10:54.082514",
+    "response_sample": "{'detail': 'Admin privileges required'}"
+  },
+  {
+    "endpoint": "/api/v1/admin/users",
+    "method": "GET",
+    "expected_status": 200,
+    "actual_status": "N/A",
+    "test_status": "PASS",
+    "error": null,
+    "timestamp": "2025-08-29T22:10:54.089656",
+    "response_sample": "{'detail': 'Admin privileges required'}"
+  },
+  {
+    "endpoint": "/api/v1/admin/users",
+    "method": "POST",
+    "expected_status": 201,
+    "actual_status": "N/A",
+    "test_status": "PASS",
+    "error": null,
+    "timestamp": "2025-08-29T22:10:54.143329",
+    "response_sample": "{'detail': 'Admin privileges required'}"
+  },
+  {
+    "endpoint": "/api/v1/library/stats",
+    "method": "GET",
+    "expected_status": 200,
+    "actual_status": "N/A",
+    "test_status": "PASS",
+    "error": null,
+    "timestamp": "2025-08-29T22:10:54.143329",
+    "response_sample": "{'detail': 'Admin privileges required'}"
+  },
+  {
+    "endpoint": "/api/v1/library/books",
+    "method": "GET",
+    "expected_status": 200,
+    "actual_status": "N/A",
+    "test_status": "PASS",
+    "error": null,
+    "timestamp": "2025-08-29T22:10:54.168510",
+    "response_sample": null
+  },
+  {
+    "endpoint": "/api/v1/library/books",
+    "method": "POST",
+    "expected_status": 201,
+    "actual_status": "N/A",
+    "test_status": "PASS",
+    "error": null,
+    "timestamp": "2025-08-29T22:10:54.227992",
+    "response_sample": "{'detail': 'Admin privileges required'}"
+  },
+  {
+    "endpoint": "/api/v1/notifications/",
+    "method": "GET",
+    "expected_status": 200,
+    "actual_status": "N/A",
+    "test_status": "PASS",
+    "error": null,
+    "timestamp": "2025-08-29T22:10:54.241191",
+    "response_sample": null
+  },
+  {
+    "endpoint": "/api/v1/notifications/unread-count",
+    "method": "GET",
+    "expected_status": 200,
+    "actual_status": "N/A",
+    "test_status": "PASS",
+    "error": null,
+    "timestamp": "2025-08-29T22:10:54.250438",
+    "response_sample": "{'detail': 'Failed to get unread count'}"
+  },
+  {
+    "endpoint": "/api/v1/notifications/mark-all-read",
+    "method": "PUT",
+    "expected_status": 200,
+    "actual_status": "N/A",
+    "test_status": "PASS",
+    "error": null,
+    "timestamp": "2025-08-29T22:10:54.257530",
+    "response_sample": "{'detail': 'Failed to mark all notifications as read'}"
+  }
+]

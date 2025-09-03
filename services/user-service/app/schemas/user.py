@@ -54,6 +54,25 @@ class UserLogin(BaseModel):
             if not username and not email:
                 raise ValueError('Either username or email must be provided')
         return values
+        
+# Schema for password change
+class PasswordChange(BaseModel):
+    current_password: str = Field(..., description="Current password")
+    new_password: str = Field(..., min_length=8, description="New password must be at least 8 characters")
+    
+    @validator('new_password')
+    def validate_new_password_strength(cls, v):
+        if len(v) < 8:
+            raise ValueError('New password must be at least 8 characters long')
+        if not re.search(r'[A-Z]', v):
+            raise ValueError('New password must contain at least one uppercase letter')
+        if not re.search(r'[a-z]', v):
+            raise ValueError('New password must contain at least one lowercase letter')
+        if not re.search(r'\d', v):
+            raise ValueError('New password must contain at least one digit')
+        if not re.search(r'[!@#$%^&*(),.?":{}|<>]', v):
+            raise ValueError('New password must contain at least one special character')
+        return v
 
 # Schema for MFA verification
 class MFAVerify(BaseModel):

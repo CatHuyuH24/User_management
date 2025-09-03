@@ -6,6 +6,9 @@ document.addEventListener('DOMContentLoaded', function () {
   // Redirect if not authenticated
   redirectIfNotAuthenticated();
 
+  // Initialize periodic session validation
+  startSessionValidation();
+
   // Load user profile
   loadUserProfile();
 
@@ -13,10 +16,27 @@ document.addEventListener('DOMContentLoaded', function () {
   initializeEditForm();
 });
 
+// Periodic session validation to catch server restarts
+function startSessionValidation() {
+  // Validate session every 60 seconds
+  setInterval(async () => {
+    if (isAuthenticated()) {
+      await validateUserSession();
+    }
+  }, 60000); // 60 seconds
+}
+
 async function loadUserProfile() {
   showLoading(true);
 
   try {
+    // First validate the session
+    const sessionValid = await validateUserSession();
+    if (!sessionValid) {
+      // Session validation will handle the redirect
+      return;
+    }
+
     userProfile = await apiCall('/me', {
       method: 'GET',
     });
@@ -26,10 +46,9 @@ async function loadUserProfile() {
     // Load MFA status
     await loadMfaStatus();
   } catch (error) {
-    if (error.message.includes('401')) {
-      // Token expired or invalid
-      removeAuthToken();
-      window.location.href = 'login.html';
+    if (error.message.includes('401') || error.message.includes('Authentication required')) {
+      // Token expired or invalid - handleAuthenticationFailure already called
+      return;
     } else {
       showAlert(
         'Failed to load profile. Please try refreshing the page.',
@@ -233,6 +252,28 @@ function logout() {
   }
 }
 
+// Back to dashboard function
+function goBackToDashboard() {
+  // Determine the appropriate dashboard based on user role
+  if (userProfile) {
+    if (userProfile.role === 'admin' || userProfile.role === 'super_admin') {
+      window.location.href = 'admin-dashboard.html';
+    } else {
+      window.location.href = 'client-dashboard.html';
+    }
+  } else {
+    // If no profile loaded, try to load it first
+    loadUserProfile()
+      .then(() => {
+        goBackToDashboard();
+      })
+      .catch(() => {
+        // Fallback to client dashboard
+        window.location.href = 'client-dashboard.html';
+      });
+  }
+}
+
 // Avatar related functions
 function displayAvatar(avatarUrl) {
   const avatarImage = document.getElementById('avatarImage');
@@ -387,7 +428,7 @@ function showChangePasswordModal() {
 
   // Clear form
   document.getElementById('changePasswordForm').reset();
-  clearAllFieldErrors();
+  clearAllErrors(document.getElementById('changePasswordForm'));
 }
 
 async function changePassword() {
@@ -440,12 +481,12 @@ async function changePassword() {
       return;
     }
 
-    clearAllFieldErrors();
+    clearAllErrors(document.getElementById('changePasswordForm'));
 
     // Change password via API
     showLoading(true, 'Updating password...');
 
-    const response = await apiCall('/auth/change-password', {
+    const response = await apiCall('/change-password', {
       method: 'POST',
       body: JSON.stringify({
         current_password: currentPassword,

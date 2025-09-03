@@ -106,8 +106,8 @@ fi
     fi
 done
 
-# Create default admin account
-echo "👤 Creating default admin account..."
+# Create default user accounts (admin and client)
+echo "👤 Creating default user accounts..."
 if command -v python3 &> /dev/null; then
     PYTHON_CMD="python3"
 else
@@ -115,13 +115,13 @@ else
 fi
 
 cd scripts
-$PYTHON_CMD create_admin.py
-admin_exit_code=$?
+$PYTHON_CMD create_users.py
+users_exit_code=$?
 cd ..
 
-if [ $admin_exit_code -ne 0 ]; then
-    echo "⚠️  Warning: Failed to create admin account automatically."
-    echo "   You can create it manually later or check the logs."
+if [ $users_exit_code -ne 0 ]; then
+    echo "⚠️  Warning: Failed to create user accounts automatically."
+    echo "   You can create them manually later or check the logs."
 fi
 
 # Start frontend server in background
@@ -156,28 +156,38 @@ echo "📱 Application Access:"
 echo "   • Home Page:       http://localhost:3001"
 echo "   • Client Portal:   http://localhost:3001/client-dashboard.html"
 echo "   • Admin Portal:    http://localhost:3001/admin-dashboard.html"
+echo "   • Profile Page:    http://localhost:3001/profile.html"
 echo "   • Backend API:     http://localhost:8000"
 echo "   • API Docs:        http://localhost:8000/docs"
 echo "   • Health Check:    http://localhost:8000/health"
 echo ""
-echo "👤 Default Admin Account:"
-echo "   • Username:  HuyAdminnh"
-echo "   • Email:     uynhhuc810@gmail.com"
-echo "   • Password:  aAdDmMiInna33%$"
-echo "   • Role:      Super Admin"
+echo "👤 Default User Accounts:"
+echo "   📱 Super Admin Account:"
+echo "      • Username:  super"
+echo "      • Email:     super@admin.com"
+echo "      • Password:  SuperAdminPassword123!"
+echo "      • Role:      Super Admin"
+echo ""
+echo "   👨‍💼 Client Account:"
+echo "      • Username:  client"
+echo "      • Email:     client@example.com"
+echo "      • Password:  ClientPassword123!"
+echo "      • Role:      Client"
 echo ""
 echo "🔐 Security Features:"
 echo "   • Multi-Factor Authentication (MFA) - Setup required on first login"
 echo "   • Role-based Access Control (RBAC)"
 echo "   • Email Verification System"
-echo "   • JWT Token-based Authentication"
+echo "   • JWT Token-based Authentication (30-minute expiry)"
+echo "   • Auto-logout on session expiry"
+echo "   • Password Reset Functionality"
 echo ""
 echo "📚 Client Portal Features:"
 echo "   • Browse & Search Digital Library"
 echo "   • Book Borrowing & Returns"
 echo "   • Personal Reading Dashboard"
 echo "   • Due Date Notifications"
-echo "   • Profile Management"
+echo "   • Profile Management with Password Change"
 echo ""
 echo "🔧 Admin Portal Features:"
 echo "   • Complete User Management (CRUD)"
@@ -186,20 +196,25 @@ echo "   • Loan Monitoring & Reports"
 echo "   • System Analytics Dashboard"
 echo "   • Bulk Operations & Data Export"
 echo ""
-echo "�️  Management Commands:"
+echo "🛠️  Management Commands:"
 echo "   • Stop backend:     docker-compose down"
 echo "   • View logs:        docker-compose logs user-service"
 echo "   • Stop frontend:    kill $FRONTEND_PID"
 echo "   • Database access:  docker-compose exec db psql -U user -d db"
+echo "   • Run API tests:    cd services/user-service && python test_runner.py"
+echo "   • Health check:     curl http://localhost:8000/health"
 echo ""
 echo "📝 Frontend Process ID: $FRONTEND_PID"
 echo "   To stop frontend: kill $FRONTEND_PID"
 echo ""
 echo "⚠️  IMPORTANT NOTES:"
 echo "   • Change the default admin password after first login"
-echo "   • Set up MFA for the admin account for enhanced security" 
+echo "   • Set up MFA for the admin account for enhanced security"
 echo "   • Configure SMTP settings for email functionality"
 echo "   • Review and update security settings for production"
 echo "   • Admin users are automatically redirected to admin portal"
 echo "   • Client users access the library through client portal"
+echo "   • Auto-logout occurs when session expires or server restarts"
+echo "   • Password reset is available for all users"
+echo "   • Rate limits increased for comprehensive testing"
 echo ""

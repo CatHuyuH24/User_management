@@ -22,9 +22,10 @@ class Settings(BaseSettings):
     PASSWORD_REQUIRE_DIGITS: bool = True
     PASSWORD_REQUIRE_SPECIAL: bool = True
     
-    # Rate Limiting
-    SIGNUP_RATE_LIMIT: int = 5  # per hour per IP
-    LOGIN_RATE_LIMIT: int = 10  # per hour per IP
+    # Rate Limiting (Increased for testing)
+    SIGNUP_RATE_LIMIT: int = 100  # per hour per IP (increased for testing)
+    LOGIN_RATE_LIMIT: int = 200  # per hour per IP (increased for testing)
+    API_RATE_LIMIT: int = 1000  # per hour per IP (added general API rate limit)
     
     # Email Configuration (for future email verification)
     SMTP_TLS: bool = True

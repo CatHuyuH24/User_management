@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, CheckConstraint, Enum
 from sqlalchemy.sql import func
+from sqlalchemy.dialects.postgresql import ENUM
 from core.database import Base
 import enum
 
@@ -7,6 +8,9 @@ class UserRole(enum.Enum):
     CLIENT = "client"
     ADMIN = "admin"
     SUPER_ADMIN = "super_admin"
+
+# Create PostgreSQL enum explicitly
+user_role_enum = ENUM('client', 'admin', 'super_admin', name='userrole', create_type=False)
 
 class User(Base):
     __tablename__ = "users"
@@ -17,7 +21,7 @@ class User(Base):
     hashed_password = Column(String(255), nullable=False)
     is_active = Column(Boolean, default=True)
     is_verified = Column(Boolean, default=False)
-    role = Column(Enum(UserRole), default=UserRole.CLIENT, nullable=False)
+    role = Column(user_role_enum, default=UserRole.CLIENT.value, nullable=False)
     mfa_enabled = Column(Boolean, default=False)
     
     # Timestamps

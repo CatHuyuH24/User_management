@@ -1,0 +1,1060 @@
+[
+  {
+    "endpoint": "/",
+    "method": "GET",
+    "full_url": "http://localhost:8000/",
+    "request_headers": {},
+    "request_body": {},
+    "request_params": {},
+    "status_code": 200,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "349",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "message": "Enhanced User Management Service with MFA and Library Management",
+      "version": "1.0.0",
+      "features": [
+        "Multi-Factor Authentication (TOTP)",
+        "Role-based Access Control",
+        "Admin Portal with User Management",
+        "Library Management System",
+        "Email Notifications",
+        "User Deletion with Audit Trail"
+      ],
+      "docs_url": "/docs",
+      "admin_email": "uynhhuc810@gmail.com"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:35.056665",
+    "status": "OPERATIONAL"
+  },
+  {
+    "endpoint": "/health",
+    "method": "GET",
+    "full_url": "http://localhost:8000/health",
+    "request_headers": {},
+    "request_body": {},
+    "request_params": {},
+    "status_code": 200,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "161",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "status": "healthy",
+      "service": "enhanced-user-management",
+      "features": {
+        "mfa": true,
+        "admin_portal": true,
+        "library_management": true,
+        "notifications": true,
+        "email": true
+      }
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:35.059267",
+    "status": "OPERATIONAL"
+  },
+  {
+    "endpoint": "/api/v1/signup",
+    "method": "POST",
+    "full_url": "http://localhost:8000/api/v1/signup",
+    "request_headers": {},
+    "request_body": {
+      "username": "newuser_1756892975",
+      "email": "newuser_1756892975@example.com",
+      "password": "NewPassword123!"
+    },
+    "request_params": {},
+    "status_code": 201,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "457",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "message": "User created successfully. Please complete MFA setup on first login for enhanced security.",
+      "user": {
+        "id": 17,
+        "username": "newuser_1756892975",
+        "email": "newuser_1756892975@example.com",
+        "is_active": true,
+        "is_verified": true,
+        "role": "client",
+        "mfa_enabled": false,
+        "created_at": "2025-09-03T09:49:35.109456Z",
+        "first_name": null,
+        "last_name": null,
+        "year_of_birth": null,
+        "description": null,
+        "avatar_url": null
+      },
+      "verification_required": true,
+      "mfa_setup_required": true
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:35.062183",
+    "status": "OPERATIONAL"
+  },
+  {
+    "endpoint": "/api/v1/login",
+    "method": "POST",
+    "full_url": "http://localhost:8000/api/v1/login",
+    "request_headers": {},
+    "request_body": {
+      "username": "nonexistent",
+      "password": "wrong"
+    },
+    "request_params": {},
+    "status_code": 401,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "www-authenticate": "Bearer",
+      "content-length": "49",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Incorrect username/email or password"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:35.355790",
+    "status": "AUTH_REQUIRED"
+  },
+  {
+    "endpoint": "/api/v1/refresh",
+    "method": "POST",
+    "full_url": "http://localhost:8000/api/v1/refresh",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoidGVzdHVzZXJfMTc1Njg5Mjk3NEBleGFtcGxlLmNvbSIsInJvbGUiOiJjbGllbnQiLCJ1c2VybmFtZSI6InRlc3R1c2VyXzE3NTY4OTI5NzQiLCJtZmFfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE3NTY4OTQ3NzQsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTY4OTI5NzR9.c0mmtI9JQ_NyHEw06pQ27xchV9WOo66kp3tIPAM4Q58"
+    },
+    "request_body": {},
+    "request_params": {},
+    "status_code": 200,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "393",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoidGVzdHVzZXJfMTc1Njg5Mjk3NEBleGFtcGxlLmNvbSIsInJvbGUiOiJjbGllbnQiLCJ1c2VybmFtZSI6InRlc3R1c2VyXzE3NTY4OTI5NzQiLCJtZmFfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE3NTY4OTQ3NzUsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTY4OTI5NzV9.Fxtqkn8SJtFK6jB2cG8SInOq_MEwjB9RfyAC_0IaKFA",
+      "token_type": "bearer",
+      "expires_in": 1800,
+      "mfa_required": false
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:35.361359",
+    "status": "OPERATIONAL"
+  },
+  {
+    "endpoint": "/api/v1/me",
+    "method": "GET",
+    "full_url": "http://localhost:8000/api/v1/me",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoidGVzdHVzZXJfMTc1Njg5Mjk3NEBleGFtcGxlLmNvbSIsInJvbGUiOiJjbGllbnQiLCJ1c2VybmFtZSI6InRlc3R1c2VyXzE3NTY4OTI5NzQiLCJtZmFfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE3NTY4OTQ3NzQsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTY4OTI5NzR9.c0mmtI9JQ_NyHEw06pQ27xchV9WOo66kp3tIPAM4Q58"
+    },
+    "request_body": {},
+    "request_params": {},
+    "status_code": 200,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "296",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "id": 15,
+      "username": "testuser_1756892974",
+      "email": "testuser_1756892974@example.com",
+      "is_active": true,
+      "is_verified": true,
+      "role": "client",
+      "mfa_enabled": false,
+      "created_at": "2025-09-03T09:49:34.068188Z",
+      "first_name": "Test",
+      "last_name": "User",
+      "year_of_birth": null,
+      "description": null,
+      "avatar_url": null
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:35.365925",
+    "status": "OPERATIONAL"
+  },
+  {
+    "endpoint": "/api/v1/logout",
+    "method": "POST",
+    "full_url": "http://localhost:8000/api/v1/logout",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoidGVzdHVzZXJfMTc1Njg5Mjk3NEBleGFtcGxlLmNvbSIsInJvbGUiOiJjbGllbnQiLCJ1c2VybmFtZSI6InRlc3R1c2VyXzE3NTY4OTI5NzQiLCJtZmFfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE3NTY4OTQ3NzQsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTY4OTI5NzR9.c0mmtI9JQ_NyHEw06pQ27xchV9WOo66kp3tIPAM4Q58"
+    },
+    "request_body": {},
+    "request_params": {},
+    "status_code": 200,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "37",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "message": "Successfully logged out"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:35.371876",
+    "status": "OPERATIONAL"
+  },
+  {
+    "endpoint": "/api/v1/users/me",
+    "method": "GET",
+    "full_url": "http://localhost:8000/api/v1/users/me",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoidGVzdHVzZXJfMTc1Njg5Mjk3NEBleGFtcGxlLmNvbSIsInJvbGUiOiJjbGllbnQiLCJ1c2VybmFtZSI6InRlc3R1c2VyXzE3NTY4OTI5NzQiLCJtZmFfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE3NTY4OTQ3NzQsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTY4OTI5NzR9.c0mmtI9JQ_NyHEw06pQ27xchV9WOo66kp3tIPAM4Q58"
+    },
+    "request_body": {},
+    "request_params": {},
+    "status_code": 200,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "296",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "id": 15,
+      "username": "testuser_1756892974",
+      "email": "testuser_1756892974@example.com",
+      "is_active": true,
+      "is_verified": true,
+      "role": "client",
+      "mfa_enabled": false,
+      "created_at": "2025-09-03T09:49:34.068188Z",
+      "first_name": "Test",
+      "last_name": "User",
+      "year_of_birth": null,
+      "description": null,
+      "avatar_url": null
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:35.374178",
+    "status": "OPERATIONAL"
+  },
+  {
+    "endpoint": "/api/v1/users/me",
+    "method": "PUT",
+    "full_url": "http://localhost:8000/api/v1/users/me",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoidGVzdHVzZXJfMTc1Njg5Mjk3NEBleGFtcGxlLmNvbSIsInJvbGUiOiJjbGllbnQiLCJ1c2VybmFtZSI6InRlc3R1c2VyXzE3NTY4OTI5NzQiLCJtZmFfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE3NTY4OTQ3NzQsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTY4OTI5NzR9.c0mmtI9JQ_NyHEw06pQ27xchV9WOo66kp3tIPAM4Q58"
+    },
+    "request_body": {
+      "first_name": "Updated",
+      "description": "Test update"
+    },
+    "request_params": {},
+    "status_code": 200,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "308",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "id": 15,
+      "username": "testuser_1756892974",
+      "email": "testuser_1756892974@example.com",
+      "is_active": true,
+      "is_verified": true,
+      "role": "client",
+      "mfa_enabled": false,
+      "created_at": "2025-09-03T09:49:34.068188Z",
+      "first_name": "Updated",
+      "last_name": "User",
+      "year_of_birth": null,
+      "description": "Test update",
+      "avatar_url": null
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:35.379694",
+    "status": "OPERATIONAL"
+  },
+  {
+    "endpoint": "/api/v1/auth/mfa/status",
+    "method": "GET",
+    "full_url": "http://localhost:8000/api/v1/auth/mfa/status",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoidGVzdHVzZXJfMTc1Njg5Mjk3NEBleGFtcGxlLmNvbSIsInJvbGUiOiJjbGllbnQiLCJ1c2VybmFtZSI6InRlc3R1c2VyXzE3NTY4OTI5NzQiLCJtZmFfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE3NTY4OTQ3NzQsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTY4OTI5NzR9.c0mmtI9JQ_NyHEw06pQ27xchV9WOo66kp3tIPAM4Q58"
+    },
+    "request_body": {},
+    "request_params": {},
+    "status_code": 200,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "79",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "enabled": false,
+      "secret_exists": false,
+      "backup_codes_count": 0,
+      "last_used": null
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:35.437887",
+    "status": "OPERATIONAL"
+  },
+  {
+    "endpoint": "/api/v1/auth/mfa/initiate",
+    "method": "POST",
+    "full_url": "http://localhost:8000/api/v1/auth/mfa/initiate",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoidGVzdHVzZXJfMTc1Njg5Mjk3NEBleGFtcGxlLmNvbSIsInJvbGUiOiJjbGllbnQiLCJ1c2VybmFtZSI6InRlc3R1c2VyXzE3NTY4OTI5NzQiLCJtZmFfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE3NTY4OTQ3NzQsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTY4OTI5NzR9.c0mmtI9JQ_NyHEw06pQ27xchV9WOo66kp3tIPAM4Q58"
+    },
+    "request_body": {},
+    "request_params": {},
+    "status_code": 200,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "1878",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "qr_code": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAhIAAAISAQAAAACxRhsSAAAEwUlEQVR4nO2dUYrjOhBFbz0b8ilDL6CXouysmSXNDuylZAED8meDTb0PSaVyOvTwmESTF64+QmwnBxsuJdVVSRbFn7blnz9GAGSQQQYZZJBBBhlkkNEYUtoILNMucl5FsMiI+q22M5DPtcNnexYyXpEBVVVFVFXVNChiGhRRN+gcNuiMoVzILWxQTYO6v83P8ixkvD5jtegYNrs4qHzoBjljl6rYcikH3/vfBxlk3Grj1bFinQBgUEEAgPVtU2AbxX4i8ef974MMMv4LQ+RdVX9Mu+iMXfJwVaZBEdOex6xd7oMMMm4xgqrOABAvIsB6UsTLCETVKtH3zf1OVbdrxj3ugwwyvmHkjH4CkEelCZAzBgXWEVW2J5WPywg5Y8/p/v3vgwwybjc9tpzRz0FV57CVeGq/u/UP5vtkPJ4Bp05NKBItnbp3oxCTSTTBH1KnZDycUbWGQXUOqgDMPwUABFOxqjYVZynTPyWjD6P6/NniRwmqRYnqbf9yCJShQdYzdUpGD4Yfd1o8zRn9HDaf1scaRev4gPGUjG6MQ5w8dP55enQGqhxtBjVqcaioUzL+AiPaHKkmQM7tyipSJ1R30R9yKgJ+zH2QQcaX1vIjH1QBFGEGc6PqVWcOMN8now/D6qU21I9mk9Z0KXsACfB1Vcz3yejHcP5pzu2bB+VM1Houz5tqrfqjTsnoxHB5VCk4DSVnKlcTTMCqxQOwQ/b7ZPRhmC81uIy+2P4AqjpryC2zqlsVMHVKRheGn49SG3zmYFl9qXpuszFrm1+lTsnowXDxNB/Huqikdf7OK/1i+1OnZPRgHPIo+2Y+fz1nQ1OzBOyDOiWjGyNbp+tYcyYAWN4/pZzLVafm/a8jfGX/kz0LGS/IyGLTsiDKOvWfkyAm+HMAoMv0CzWjStD73QcZZHzbDl4pUMaibRofKNG2+PzH37HfJ6ML4+jfHzyoUgm9oZ1z1hV9KTL6M+Kl7oeCVUTn9VQ9gLqir6T/4VOwvH/mxf7FYn2yZyHjBRnOPy3RMdwoRw3qq/lsCRXjKRmdGDmPkqgAsL5tiGkfFesEiReBYp0EZceJCYp13BTrSSUmMI8ioxfDjU+LdZ9sssnWosxWpZLtVLRqf8ZTMnowbAmpzT3hsKgkyxZlLvW6HJX9Phl9GD7fb6VSzZcqC/eKmvM/SjEA4ykZ3RjH9fuDzfTXAOr7ffgtJcF+n4x+DOfzl8n75AekV8J0df9WEUCdkvF4htuFx007WfmUT5dC1fNci1WpUzI6Mcw/BZpDWoXpa01zeG3r/aLpmzol4+GMwzq+NPiI6T0AX+2fz5hNRZ2S8XjGl/36LF1qYdNvN4VmolKnZHRjuH170EQYW+J0tWavjgDaf6lTMrox8mgzATqvIwDsUr5Z/eky7SIfFzsXVOV87/sgg4zb7ZDq1zwegK/sb/v1ubJp+lJk/D2GfKRdsmyXqb6Np8RYVHc1f7Ms61mfhYzXYXx5L88yDRuWdwWW87AJwi8BgkIQElB28HnbpLy/5173QQYZ37bqS6m69/HlVmdL3YDAva3PVvyz3yfj4Ywv+X7b8aTshd4qpwbnASjrUMjoyBD9/W9+05ZneRYyyCCDDDLIIIMMMv7/jH8BUQhWaUHsw8gAAAAASUVORK5CYII=",
+      "secret_key": "44N4LWWSN6ACYL3P2AGY3L2LCV4S2OU2",
+      "message": "Scan the QR code with your authenticator app, then verify with the generated code"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:35.443416",
+    "status": "OPERATIONAL"
+  },
+  {
+    "endpoint": "/api/v1/auth/mfa/setup",
+    "method": "POST",
+    "full_url": "http://localhost:8000/api/v1/auth/mfa/setup",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoidGVzdHVzZXJfMTc1Njg5Mjk3NEBleGFtcGxlLmNvbSIsInJvbGUiOiJjbGllbnQiLCJ1c2VybmFtZSI6InRlc3R1c2VyXzE3NTY4OTI5NzQiLCJtZmFfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE3NTY4OTQ3NzQsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTY4OTI5NzR9.c0mmtI9JQ_NyHEw06pQ27xchV9WOo66kp3tIPAM4Q58"
+    },
+    "request_body": {
+      "verification_code": "123456"
+    },
+    "request_params": {},
+    "status_code": 500,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "32",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Failed to setup MFA"
+    },
+    "error_message": "{'detail': 'Failed to setup MFA'}",
+    "test_timestamp": "2025-09-03T16:49:35.477672",
+    "status": "SERVER_ERROR"
+  },
+  {
+    "endpoint": "/api/v1/auth/mfa/verify",
+    "method": "POST",
+    "full_url": "http://localhost:8000/api/v1/auth/mfa/verify",
+    "request_headers": {},
+    "request_body": {
+      "mfa_code": "123456"
+    },
+    "request_params": {},
+    "status_code": 500,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "33",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Failed to verify MFA"
+    },
+    "error_message": "{'detail': 'Failed to verify MFA'}",
+    "test_timestamp": "2025-09-03T16:49:35.533812",
+    "status": "SERVER_ERROR"
+  },
+  {
+    "endpoint": "/api/v1/auth/mfa/disable",
+    "method": "POST",
+    "full_url": "http://localhost:8000/api/v1/auth/mfa/disable",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoidGVzdHVzZXJfMTc1Njg5Mjk3NEBleGFtcGxlLmNvbSIsInJvbGUiOiJjbGllbnQiLCJ1c2VybmFtZSI6InRlc3R1c2VyXzE3NTY4OTI5NzQiLCJtZmFfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE3NTY4OTQ3NzQsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTY4OTI5NzR9.c0mmtI9JQ_NyHEw06pQ27xchV9WOo66kp3tIPAM4Q58"
+    },
+    "request_body": {
+      "password": "TestPassword123!",
+      "mfa_code": "123456"
+    },
+    "request_params": {},
+    "status_code": 200,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "48",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "message": "MFA has been disabled successfully"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:35.580033",
+    "status": "OPERATIONAL"
+  },
+  {
+    "endpoint": "/api/v1/auth/mfa/qr-code",
+    "method": "GET",
+    "full_url": "http://localhost:8000/api/v1/auth/mfa/qr-code",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoidGVzdHVzZXJfMTc1Njg5Mjk3NEBleGFtcGxlLmNvbSIsInJvbGUiOiJjbGllbnQiLCJ1c2VybmFtZSI6InRlc3R1c2VyXzE3NTY4OTI5NzQiLCJtZmFfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE3NTY4OTQ3NzQsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTY4OTI5NzR9.c0mmtI9JQ_NyHEw06pQ27xchV9WOo66kp3tIPAM4Q58"
+    },
+    "request_body": {},
+    "request_params": {},
+    "status_code": 400,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "45",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "MFA is not enabled for this user"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:35.880243",
+    "status": "VALIDATION_ERROR"
+  },
+  {
+    "endpoint": "/api/v1/auth/mfa/backup-codes/regenerate",
+    "method": "POST",
+    "full_url": "http://localhost:8000/api/v1/auth/mfa/backup-codes/regenerate",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoidGVzdHVzZXJfMTc1Njg5Mjk3NEBleGFtcGxlLmNvbSIsInJvbGUiOiJjbGllbnQiLCJ1c2VybmFtZSI6InRlc3R1c2VyXzE3NTY4OTI5NzQiLCJtZmFfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE3NTY4OTQ3NzQsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTY4OTI5NzR9.c0mmtI9JQ_NyHEw06pQ27xchV9WOo66kp3tIPAM4Q58"
+    },
+    "request_body": {},
+    "request_params": {},
+    "status_code": 400,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "45",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "MFA is not enabled for this user"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:35.887158",
+    "status": "VALIDATION_ERROR"
+  },
+  {
+    "endpoint": "/api/v1/admin/dashboard",
+    "method": "GET",
+    "full_url": "http://localhost:8000/api/v1/admin/dashboard",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNiIsImVtYWlsIjoidGVzdGFkbWluXzE3NTY4OTI5NzRAZXhhbXBsZS5jb20iLCJyb2xlIjoiY2xpZW50IiwidXNlcm5hbWUiOiJ0ZXN0YWRtaW5fMTc1Njg5Mjk3NCIsIm1mYV92ZXJpZmllZCI6ZmFsc2UsImV4cCI6MTc1Njg5NDc3NSwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1Njg5Mjk3NX0.2gioPOOLQrcypmd0iB8B21-tYPEMk1ea03R1P80ZA9c"
+    },
+    "request_body": {},
+    "request_params": {},
+    "status_code": 403,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "38",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Admin privileges required"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:35.893348",
+    "status": "AUTH_REQUIRED"
+  },
+  {
+    "endpoint": "/api/v1/admin/users",
+    "method": "GET",
+    "full_url": "http://localhost:8000/api/v1/admin/users",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNiIsImVtYWlsIjoidGVzdGFkbWluXzE3NTY4OTI5NzRAZXhhbXBsZS5jb20iLCJyb2xlIjoiY2xpZW50IiwidXNlcm5hbWUiOiJ0ZXN0YWRtaW5fMTc1Njg5Mjk3NCIsIm1mYV92ZXJpZmllZCI6ZmFsc2UsImV4cCI6MTc1Njg5NDc3NSwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1Njg5Mjk3NX0.2gioPOOLQrcypmd0iB8B21-tYPEMk1ea03R1P80ZA9c"
+    },
+    "request_body": {},
+    "request_params": {},
+    "status_code": 403,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "38",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Admin privileges required"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:35.898341",
+    "status": "AUTH_REQUIRED"
+  },
+  {
+    "endpoint": "/api/v1/admin/users",
+    "method": "POST",
+    "full_url": "http://localhost:8000/api/v1/admin/users",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNiIsImVtYWlsIjoidGVzdGFkbWluXzE3NTY4OTI5NzRAZXhhbXBsZS5jb20iLCJyb2xlIjoiY2xpZW50IiwidXNlcm5hbWUiOiJ0ZXN0YWRtaW5fMTc1Njg5Mjk3NCIsIm1mYV92ZXJpZmllZCI6ZmFsc2UsImV4cCI6MTc1Njg5NDc3NSwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1Njg5Mjk3NX0.2gioPOOLQrcypmd0iB8B21-tYPEMk1ea03R1P80ZA9c"
+    },
+    "request_body": {
+      "username": "adminuser_1756892975",
+      "email": "adminuser_1756892975@example.com",
+      "password": "AdminUser123!"
+    },
+    "request_params": {},
+    "status_code": 403,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "38",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Admin privileges required"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:35.905619",
+    "status": "AUTH_REQUIRED"
+  },
+  {
+    "endpoint": "/api/v1/admin/users/1",
+    "method": "GET",
+    "full_url": "http://localhost:8000/api/v1/admin/users/1",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNiIsImVtYWlsIjoidGVzdGFkbWluXzE3NTY4OTI5NzRAZXhhbXBsZS5jb20iLCJyb2xlIjoiY2xpZW50IiwidXNlcm5hbWUiOiJ0ZXN0YWRtaW5fMTc1Njg5Mjk3NCIsIm1mYV92ZXJpZmllZCI6ZmFsc2UsImV4cCI6MTc1Njg5NDc3NSwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1Njg5Mjk3NX0.2gioPOOLQrcypmd0iB8B21-tYPEMk1ea03R1P80ZA9c"
+    },
+    "request_body": {},
+    "request_params": {},
+    "status_code": 403,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "38",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Admin privileges required"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:35.951465",
+    "status": "AUTH_REQUIRED"
+  },
+  {
+    "endpoint": "/api/v1/admin/users/1",
+    "method": "PUT",
+    "full_url": "http://localhost:8000/api/v1/admin/users/1",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNiIsImVtYWlsIjoidGVzdGFkbWluXzE3NTY4OTI5NzRAZXhhbXBsZS5jb20iLCJyb2xlIjoiY2xpZW50IiwidXNlcm5hbWUiOiJ0ZXN0YWRtaW5fMTc1Njg5Mjk3NCIsIm1mYV92ZXJpZmllZCI6ZmFsc2UsImV4cCI6MTc1Njg5NDc3NSwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1Njg5Mjk3NX0.2gioPOOLQrcypmd0iB8B21-tYPEMk1ea03R1P80ZA9c"
+    },
+    "request_body": {
+      "first_name": "Updated"
+    },
+    "request_params": {},
+    "status_code": 403,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "38",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Admin privileges required"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:35.957900",
+    "status": "AUTH_REQUIRED"
+  },
+  {
+    "endpoint": "/api/v1/admin/users/1",
+    "method": "DELETE",
+    "full_url": "http://localhost:8000/api/v1/admin/users/1",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNiIsImVtYWlsIjoidGVzdGFkbWluXzE3NTY4OTI5NzRAZXhhbXBsZS5jb20iLCJyb2xlIjoiY2xpZW50IiwidXNlcm5hbWUiOiJ0ZXN0YWRtaW5fMTc1Njg5Mjk3NCIsIm1mYV92ZXJpZmllZCI6ZmFsc2UsImV4cCI6MTc1Njg5NDc3NSwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1Njg5Mjk3NX0.2gioPOOLQrcypmd0iB8B21-tYPEMk1ea03R1P80ZA9c"
+    },
+    "request_body": {
+      "reason": "Test deletion"
+    },
+    "request_params": {},
+    "status_code": 403,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "38",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Admin privileges required"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:36.012237",
+    "status": "AUTH_REQUIRED"
+  },
+  {
+    "endpoint": "/api/v1/library/books",
+    "method": "GET",
+    "full_url": "http://localhost:8000/api/v1/library/books",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoidGVzdHVzZXJfMTc1Njg5Mjk3NEBleGFtcGxlLmNvbSIsInJvbGUiOiJjbGllbnQiLCJ1c2VybmFtZSI6InRlc3R1c2VyXzE3NTY4OTI5NzQiLCJtZmFfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE3NTY4OTQ3NzQsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTY4OTI5NzR9.c0mmtI9JQ_NyHEw06pQ27xchV9WOo66kp3tIPAM4Q58"
+    },
+    "request_body": {},
+    "request_params": {},
+    "status_code": 200,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "2",
+      "content-type": "application/json"
+    },
+    "response_body": [],
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:36.061764",
+    "status": "OPERATIONAL"
+  },
+  {
+    "endpoint": "/api/v1/library/books",
+    "method": "POST",
+    "full_url": "http://localhost:8000/api/v1/library/books",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNiIsImVtYWlsIjoidGVzdGFkbWluXzE3NTY4OTI5NzRAZXhhbXBsZS5jb20iLCJyb2xlIjoiY2xpZW50IiwidXNlcm5hbWUiOiJ0ZXN0YWRtaW5fMTc1Njg5Mjk3NCIsIm1mYV92ZXJpZmllZCI6ZmFsc2UsImV4cCI6MTc1Njg5NDc3NSwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1Njg5Mjk3NX0.2gioPOOLQrcypmd0iB8B21-tYPEMk1ea03R1P80ZA9c"
+    },
+    "request_body": {
+      "isbn": "978-1756892976",
+      "title": "Test Book",
+      "author": "Test Author",
+      "category": "fiction"
+    },
+    "request_params": {},
+    "status_code": 403,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "38",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Admin privileges required"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:36.067938",
+    "status": "AUTH_REQUIRED"
+  },
+  {
+    "endpoint": "/api/v1/library/books/1",
+    "method": "GET",
+    "full_url": "http://localhost:8000/api/v1/library/books/1",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoidGVzdHVzZXJfMTc1Njg5Mjk3NEBleGFtcGxlLmNvbSIsInJvbGUiOiJjbGllbnQiLCJ1c2VybmFtZSI6InRlc3R1c2VyXzE3NTY4OTI5NzQiLCJtZmFfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE3NTY4OTQ3NzQsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTY4OTI5NzR9.c0mmtI9JQ_NyHEw06pQ27xchV9WOo66kp3tIPAM4Q58"
+    },
+    "request_body": {},
+    "request_params": {},
+    "status_code": 404,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "27",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Book not found"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:36.122856",
+    "status": "NOT_FOUND"
+  },
+  {
+    "endpoint": "/api/v1/library/books/1",
+    "method": "PUT",
+    "full_url": "http://localhost:8000/api/v1/library/books/1",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNiIsImVtYWlsIjoidGVzdGFkbWluXzE3NTY4OTI5NzRAZXhhbXBsZS5jb20iLCJyb2xlIjoiY2xpZW50IiwidXNlcm5hbWUiOiJ0ZXN0YWRtaW5fMTc1Njg5Mjk3NCIsIm1mYV92ZXJpZmllZCI6ZmFsc2UsImV4cCI6MTc1Njg5NDc3NSwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1Njg5Mjk3NX0.2gioPOOLQrcypmd0iB8B21-tYPEMk1ea03R1P80ZA9c"
+    },
+    "request_body": {
+      "title": "Updated Book"
+    },
+    "request_params": {},
+    "status_code": 403,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "38",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Admin privileges required"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:36.128592",
+    "status": "AUTH_REQUIRED"
+  },
+  {
+    "endpoint": "/api/v1/library/books/1",
+    "method": "DELETE",
+    "full_url": "http://localhost:8000/api/v1/library/books/1",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNiIsImVtYWlsIjoidGVzdGFkbWluXzE3NTY4OTI5NzRAZXhhbXBsZS5jb20iLCJyb2xlIjoiY2xpZW50IiwidXNlcm5hbWUiOiJ0ZXN0YWRtaW5fMTc1Njg5Mjk3NCIsIm1mYV92ZXJpZmllZCI6ZmFsc2UsImV4cCI6MTc1Njg5NDc3NSwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1Njg5Mjk3NX0.2gioPOOLQrcypmd0iB8B21-tYPEMk1ea03R1P80ZA9c"
+    },
+    "request_body": {},
+    "request_params": {},
+    "status_code": 403,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "38",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Admin privileges required"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:36.182064",
+    "status": "AUTH_REQUIRED"
+  },
+  {
+    "endpoint": "/api/v1/library/loans",
+    "method": "GET",
+    "full_url": "http://localhost:8000/api/v1/library/loans",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoidGVzdHVzZXJfMTc1Njg5Mjk3NEBleGFtcGxlLmNvbSIsInJvbGUiOiJjbGllbnQiLCJ1c2VybmFtZSI6InRlc3R1c2VyXzE3NTY4OTI5NzQiLCJtZmFfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE3NTY4OTQ3NzQsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTY4OTI5NzR9.c0mmtI9JQ_NyHEw06pQ27xchV9WOo66kp3tIPAM4Q58"
+    },
+    "request_body": {},
+    "request_params": {},
+    "status_code": 200,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "2",
+      "content-type": "application/json"
+    },
+    "response_body": [],
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:36.189550",
+    "status": "OPERATIONAL"
+  },
+  {
+    "endpoint": "/api/v1/library/loans",
+    "method": "POST",
+    "full_url": "http://localhost:8000/api/v1/library/loans",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoidGVzdHVzZXJfMTc1Njg5Mjk3NEBleGFtcGxlLmNvbSIsInJvbGUiOiJjbGllbnQiLCJ1c2VybmFtZSI6InRlc3R1c2VyXzE3NTY4OTI5NzQiLCJtZmFfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE3NTY4OTQ3NzQsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTY4OTI5NzR9.c0mmtI9JQ_NyHEw06pQ27xchV9WOo66kp3tIPAM4Q58"
+    },
+    "request_body": {
+      "book_id": 1
+    },
+    "request_params": {},
+    "status_code": 404,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "27",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Book not found"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:36.196832",
+    "status": "NOT_FOUND"
+  },
+  {
+    "endpoint": "/api/v1/library/loans/1/return",
+    "method": "PUT",
+    "full_url": "http://localhost:8000/api/v1/library/loans/1/return",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoidGVzdHVzZXJfMTc1Njg5Mjk3NEBleGFtcGxlLmNvbSIsInJvbGUiOiJjbGllbnQiLCJ1c2VybmFtZSI6InRlc3R1c2VyXzE3NTY4OTI5NzQiLCJtZmFfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE3NTY4OTQ3NzQsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTY4OTI5NzR9.c0mmtI9JQ_NyHEw06pQ27xchV9WOo66kp3tIPAM4Q58"
+    },
+    "request_body": {},
+    "request_params": {},
+    "status_code": 404,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "27",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Loan not found"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:36.253732",
+    "status": "NOT_FOUND"
+  },
+  {
+    "endpoint": "/api/v1/library/stats",
+    "method": "GET",
+    "full_url": "http://localhost:8000/api/v1/library/stats",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNiIsImVtYWlsIjoidGVzdGFkbWluXzE3NTY4OTI5NzRAZXhhbXBsZS5jb20iLCJyb2xlIjoiY2xpZW50IiwidXNlcm5hbWUiOiJ0ZXN0YWRtaW5fMTc1Njg5Mjk3NCIsIm1mYV92ZXJpZmllZCI6ZmFsc2UsImV4cCI6MTc1Njg5NDc3NSwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1Njg5Mjk3NX0.2gioPOOLQrcypmd0iB8B21-tYPEMk1ea03R1P80ZA9c"
+    },
+    "request_body": {},
+    "request_params": {},
+    "status_code": 403,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "38",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Admin privileges required"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:36.260841",
+    "status": "AUTH_REQUIRED"
+  },
+  {
+    "endpoint": "/api/v1/notifications/",
+    "method": "GET",
+    "full_url": "http://localhost:8000/api/v1/notifications/",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoidGVzdHVzZXJfMTc1Njg5Mjk3NEBleGFtcGxlLmNvbSIsInJvbGUiOiJjbGllbnQiLCJ1c2VybmFtZSI6InRlc3R1c2VyXzE3NTY4OTI5NzQiLCJtZmFfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE3NTY4OTQ3NzQsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTY4OTI5NzR9.c0mmtI9JQ_NyHEw06pQ27xchV9WOo66kp3tIPAM4Q58"
+    },
+    "request_body": {},
+    "request_params": {},
+    "status_code": 200,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "2",
+      "content-type": "application/json"
+    },
+    "response_body": [],
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:36.265643",
+    "status": "OPERATIONAL"
+  },
+  {
+    "endpoint": "/api/v1/notifications/unread-count",
+    "method": "GET",
+    "full_url": "http://localhost:8000/api/v1/notifications/unread-count",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoidGVzdHVzZXJfMTc1Njg5Mjk3NEBleGFtcGxlLmNvbSIsInJvbGUiOiJjbGllbnQiLCJ1c2VybmFtZSI6InRlc3R1c2VyXzE3NTY4OTI5NzQiLCJtZmFfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE3NTY4OTQ3NzQsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTY4OTI5NzR9.c0mmtI9JQ_NyHEw06pQ27xchV9WOo66kp3tIPAM4Q58"
+    },
+    "request_body": {},
+    "request_params": {},
+    "status_code": 500,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:34 GMT",
+      "server": "uvicorn",
+      "content-length": "39",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Failed to get unread count"
+    },
+    "error_message": "{'detail': 'Failed to get unread count'}",
+    "test_timestamp": "2025-09-03T16:49:36.274262",
+    "status": "SERVER_ERROR"
+  },
+  {
+    "endpoint": "/api/v1/notifications/1/read",
+    "method": "PUT",
+    "full_url": "http://localhost:8000/api/v1/notifications/1/read",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoidGVzdHVzZXJfMTc1Njg5Mjk3NEBleGFtcGxlLmNvbSIsInJvbGUiOiJjbGllbnQiLCJ1c2VybmFtZSI6InRlc3R1c2VyXzE3NTY4OTI5NzQiLCJtZmFfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE3NTY4OTQ3NzQsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTY4OTI5NzR9.c0mmtI9JQ_NyHEw06pQ27xchV9WOo66kp3tIPAM4Q58"
+    },
+    "request_body": {},
+    "request_params": {},
+    "status_code": 404,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:36 GMT",
+      "server": "uvicorn",
+      "content-length": "35",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Notification not found"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:36.280069",
+    "status": "NOT_FOUND"
+  },
+  {
+    "endpoint": "/api/v1/notifications/mark-all-read",
+    "method": "PUT",
+    "full_url": "http://localhost:8000/api/v1/notifications/mark-all-read",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoidGVzdHVzZXJfMTc1Njg5Mjk3NEBleGFtcGxlLmNvbSIsInJvbGUiOiJjbGllbnQiLCJ1c2VybmFtZSI6InRlc3R1c2VyXzE3NTY4OTI5NzQiLCJtZmFfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE3NTY4OTQ3NzQsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTY4OTI5NzR9.c0mmtI9JQ_NyHEw06pQ27xchV9WOo66kp3tIPAM4Q58"
+    },
+    "request_body": {},
+    "request_params": {},
+    "status_code": 500,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:36 GMT",
+      "server": "uvicorn",
+      "content-length": "53",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Failed to mark all notifications as read"
+    },
+    "error_message": "{'detail': 'Failed to mark all notifications as read'}",
+    "test_timestamp": "2025-09-03T16:49:36.286847",
+    "status": "SERVER_ERROR"
+  },
+  {
+    "endpoint": "/api/v1/notifications/1",
+    "method": "DELETE",
+    "full_url": "http://localhost:8000/api/v1/notifications/1",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoidGVzdHVzZXJfMTc1Njg5Mjk3NEBleGFtcGxlLmNvbSIsInJvbGUiOiJjbGllbnQiLCJ1c2VybmFtZSI6InRlc3R1c2VyXzE3NTY4OTI5NzQiLCJtZmFfdmVyaWZpZWQiOmZhbHNlLCJleHAiOjE3NTY4OTQ3NzQsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTY4OTI5NzR9.c0mmtI9JQ_NyHEw06pQ27xchV9WOo66kp3tIPAM4Q58"
+    },
+    "request_body": {},
+    "request_params": {},
+    "status_code": 404,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:36 GMT",
+      "server": "uvicorn",
+      "content-length": "35",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Notification not found"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:36.293378",
+    "status": "NOT_FOUND"
+  },
+  {
+    "endpoint": "/api/v1/notifications/admin/send",
+    "method": "POST",
+    "full_url": "http://localhost:8000/api/v1/notifications/admin/send",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNiIsImVtYWlsIjoidGVzdGFkbWluXzE3NTY4OTI5NzRAZXhhbXBsZS5jb20iLCJyb2xlIjoiY2xpZW50IiwidXNlcm5hbWUiOiJ0ZXN0YWRtaW5fMTc1Njg5Mjk3NCIsIm1mYV92ZXJpZmllZCI6ZmFsc2UsImV4cCI6MTc1Njg5NDc3NSwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1Njg5Mjk3NX0.2gioPOOLQrcypmd0iB8B21-tYPEMk1ea03R1P80ZA9c"
+    },
+    "request_body": {
+      "user_id": 1,
+      "type": "admin_message",
+      "title": "Test",
+      "message": "Test message"
+    },
+    "request_params": {},
+    "status_code": 403,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:36 GMT",
+      "server": "uvicorn",
+      "content-length": "38",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Admin privileges required"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:36.299653",
+    "status": "AUTH_REQUIRED"
+  },
+  {
+    "endpoint": "/api/v1/notifications/admin/bulk-send",
+    "method": "POST",
+    "full_url": "http://localhost:8000/api/v1/notifications/admin/bulk-send",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNiIsImVtYWlsIjoidGVzdGFkbWluXzE3NTY4OTI5NzRAZXhhbXBsZS5jb20iLCJyb2xlIjoiY2xpZW50IiwidXNlcm5hbWUiOiJ0ZXN0YWRtaW5fMTc1Njg5Mjk3NCIsIm1mYV92ZXJpZmllZCI6ZmFsc2UsImV4cCI6MTc1Njg5NDc3NSwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1Njg5Mjk3NX0.2gioPOOLQrcypmd0iB8B21-tYPEMk1ea03R1P80ZA9c"
+    },
+    "request_body": {
+      "user_ids": [
+        1
+      ],
+      "type": "admin_message",
+      "title": "Test",
+      "message": "Test message"
+    },
+    "request_params": {},
+    "status_code": 403,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:36 GMT",
+      "server": "uvicorn",
+      "content-length": "38",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Admin privileges required"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:36.353618",
+    "status": "AUTH_REQUIRED"
+  },
+  {
+    "endpoint": "/api/v1/notifications/admin/all",
+    "method": "GET",
+    "full_url": "http://localhost:8000/api/v1/notifications/admin/all",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNiIsImVtYWlsIjoidGVzdGFkbWluXzE3NTY4OTI5NzRAZXhhbXBsZS5jb20iLCJyb2xlIjoiY2xpZW50IiwidXNlcm5hbWUiOiJ0ZXN0YWRtaW5fMTc1Njg5Mjk3NCIsIm1mYV92ZXJpZmllZCI6ZmFsc2UsImV4cCI6MTc1Njg5NDc3NSwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1Njg5Mjk3NX0.2gioPOOLQrcypmd0iB8B21-tYPEMk1ea03R1P80ZA9c"
+    },
+    "request_body": {},
+    "request_params": {},
+    "status_code": 403,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:36 GMT",
+      "server": "uvicorn",
+      "content-length": "38",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Admin privileges required"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:36.404083",
+    "status": "AUTH_REQUIRED"
+  },
+  {
+    "endpoint": "/api/v1/notifications/admin/stats",
+    "method": "GET",
+    "full_url": "http://localhost:8000/api/v1/notifications/admin/stats",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNiIsImVtYWlsIjoidGVzdGFkbWluXzE3NTY4OTI5NzRAZXhhbXBsZS5jb20iLCJyb2xlIjoiY2xpZW50IiwidXNlcm5hbWUiOiJ0ZXN0YWRtaW5fMTc1Njg5Mjk3NCIsIm1mYV92ZXJpZmllZCI6ZmFsc2UsImV4cCI6MTc1Njg5NDc3NSwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1Njg5Mjk3NX0.2gioPOOLQrcypmd0iB8B21-tYPEMk1ea03R1P80ZA9c"
+    },
+    "request_body": {},
+    "request_params": {},
+    "status_code": 403,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:36 GMT",
+      "server": "uvicorn",
+      "content-length": "38",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Admin privileges required"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:36.409781",
+    "status": "AUTH_REQUIRED"
+  },
+  {
+    "endpoint": "/api/v1/notifications/admin/send-email",
+    "method": "POST",
+    "full_url": "http://localhost:8000/api/v1/notifications/admin/send-email",
+    "request_headers": {
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNiIsImVtYWlsIjoidGVzdGFkbWluXzE3NTY4OTI5NzRAZXhhbXBsZS5jb20iLCJyb2xlIjoiY2xpZW50IiwidXNlcm5hbWUiOiJ0ZXN0YWRtaW5fMTc1Njg5Mjk3NCIsIm1mYV92ZXJpZmllZCI6ZmFsc2UsImV4cCI6MTc1Njg5NDc3NSwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1Njg5Mjk3NX0.2gioPOOLQrcypmd0iB8B21-tYPEMk1ea03R1P80ZA9c"
+    },
+    "request_body": {
+      "to_email": "test@example.com",
+      "subject": "Test",
+      "html_content": "Test email"
+    },
+    "request_params": {},
+    "status_code": 403,
+    "response_headers": {
+      "date": "Wed, 03 Sep 2025 09:49:36 GMT",
+      "server": "uvicorn",
+      "content-length": "38",
+      "content-type": "application/json"
+    },
+    "response_body": {
+      "detail": "Admin privileges required"
+    },
+    "error_message": null,
+    "test_timestamp": "2025-09-03T16:49:36.415067",
+    "status": "AUTH_REQUIRED"
+  }
+]
